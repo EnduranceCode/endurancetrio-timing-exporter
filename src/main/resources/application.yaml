@@ -1,0 +1,53 @@
+#
+# MIT License
+#
+# Copyright (c) 2023 Ricardo do Canto
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+server:
+  port: 8088
+  servlet:
+    context-path: /
+  use-forward-headers: false
+spring:
+  application:
+    name: EnduranceTrio Timing Exporter
+    version: v1
+  config:
+    import: confidential.yaml
+
+  # Database configuration
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: DB_URL            # Defined @ confidential.yaml
+    username: DB_USERNAME  # Defined @ confidential.yaml
+    password: DB_PASSWORD  # Defined @ confidential.yaml
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+
+  # Swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER

@@ -1,0 +1,15 @@
+# This a template for the confidential.yaml file that must be created and configured in order
+# to be able to execute the application. The necessary steps are the following:
+#
+#   1. Copy this file and rename the copy to confidential.yaml
+#   2. Replace {DATABASE_NAME} with the application database name
+#   3. Replace {DATABASE_USER} with the application database user's username
+#   4. Replace {DATABASE_NAME} with the application database user's password
+#   5. Delete this comments block
+#
+spring:
+  # Database configuration
+  datasource:
+    url: jdbc:mysql://localhost:3306/{DATABASE_NAME}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+    username: {DATABASE_USER}
+    password: {DATABASE_PASSWORD}

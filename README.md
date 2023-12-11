@@ -67,6 +67,17 @@ replace the ***{LABELS}*** in the below command as appropriate and then execute 
 > + **{HOST}** : The name of the host from which the user connects to the MySQL Server,
 e.g. `localhost`.
 
+##### Configure the application's database access
+
+To configure the application's access to the database, take the following steps:
+
+1. Copy the file [`confidential-template.yaml`](./src/main/resources/confidential-template.yaml) and
+located in the `resources` folder and rename it to `confidential.yaml`;
+2. Replace the {DATABASE_NAME} placeholder with the application database name;
+3. Replace the {DATABASE_USER} placeholder with the application database user's username;
+4. Replace the {DATABASE_NAME} placeholder with the application database user's password;
+5. Delete this comments block at the top of the file that contains these instructions.
+
 # License
 
 **EnduranceTrio Timing Exporter** is licensed under the terms of [MIT License](./LICENSE).
