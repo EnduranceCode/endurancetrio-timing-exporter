@@ -36,18 +36,20 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>11</java.version>
+
+    <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
+  </properties>
+
   <groupId>com.endurancetrio</groupId>
   <artifactId>timing-exporter</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <name>EnduranceTrio Timing Exporter</name>
   <description>Collects and manages race timing data</description>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>11</java.version>
-  </properties>
 
   <dependencies>
     <dependency>
@@ -72,6 +74,16 @@
     </dependency>
 
     <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-mysql</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -83,6 +95,45 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>${properties-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <!--
+                  ~ At build time, the properties-maven-plugin displays the following warning:
+                  ~ "Unknown properties resource extension: 'yaml' assume as: 'properties'"
+                  ~ It seems that it doesn't full supports yaml files but is able to manage it.
+                -->
+                <file>${project.basedir}/src/main/resources/application.yaml</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <configuration>
+          <!--
+            ~ IntelliJ (and probably other IDEs) will treat the properties read with
+            ~ properties-maven-plugin as "unresolved maven property" but the build will work
+            ~ as expected.
+          -->
+          <url>${spring.datasource.url}</url>
+          <user>${spring.datasource.username}</user>
+          <password>${spring.datasource.password}</password>
+        </configuration>
       </plugin>
     </plugins>
   </build>

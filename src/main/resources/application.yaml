@@ -22,6 +22,10 @@
 # SOFTWARE.
 #
 
+flyway:
+  locations: db/migration/ddl, db/migration/dml
+  migrate-at-start: true
+  schemas: DATABASE_NAME  # Defined @ confidential.yaml
 server:
   port: 8088
   servlet:
