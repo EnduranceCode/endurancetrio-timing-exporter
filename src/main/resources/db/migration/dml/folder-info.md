@@ -3,5 +3,4 @@
 The folder [`resources/db/migration/ddl/`](.) will contain the
 [Flyway](https://www.red-gate.com/products/flyway/)
 [DML](https://en.wikipedia.org/wiki/Data_manipulation_language) scripts necessary for the database
-setup and this [file](./folder-info.md) should be deleted with the addition of the first
-SQL [DML](https://en.wikipedia.org/wiki/Data_manipulation_language) script.
+migration.
