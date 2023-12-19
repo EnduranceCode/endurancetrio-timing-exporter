@@ -46,6 +46,9 @@ spring:
     password: DB_PASSWORD  # Defined @ confidential.yaml
 
   jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     open-in-view: false
     properties:
       hibernate:
