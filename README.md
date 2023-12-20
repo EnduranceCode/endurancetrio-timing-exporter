@@ -27,6 +27,23 @@ with the following command:
 
 #### Set up the database
 
+#### Set the MySQL Server Time Zone to UTC+00:00
+
+[Set MySQL server time zone](https://www.scaler.com/topics/mysql-time-zone/) to UTC+00:00 in your
+server configuration `my.cnf` file. For an Ubuntu server, to open the `/etc/mysql/my.cnf` file,
+execute the upcoming command.
+
+    sudo nano /etc/mysql/my.cnf
+
+If the `my.cnf` file doesn't have the `[mysqld]` section, add it as shown below:
+
+    [mysqld]
+    default-time-zone='+00:00'
+
+To apply the changes, restart the MySQL server with the following command:
+
+    sudo service mysql restart
+
 ##### Create a MySQL database
 
 Login into the [MySQL](https://www.mysql.com/) server, replace the ***{LABEL}*** in the below
