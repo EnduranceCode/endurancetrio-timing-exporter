@@ -158,6 +158,28 @@ public class MylapsTimes {
   @Column(name = "AntennaInfo", length = 20)
   private String antennaInfo;
 
+  public MylapsTimes() {
+    super();
+  }
+
+  public MylapsTimes(Builder builder) {
+    this.id = builder.id;
+    this.chip = builder.chip;
+    this.chipTime = builder.chipTime;
+    this.chipType = builder.chipType;
+    this.pc = builder.pc;
+    this.reader = builder.reader;
+    this.antenna = builder.antenna;
+    this.milliSecs = builder.milliSecs;
+    this.location = builder.location;
+    this.lapRaw = builder.lapRaw;
+    this.groupId = builder.groupId;
+    this.bibId = builder.bibId;
+    this.bibTag = builder.bibTag;
+    this.batch = builder.batch;
+    this.antennaInfo = builder.antennaInfo;
+  }
+
   public Long getId() {
     return id;
   }
@@ -276,5 +298,107 @@ public class MylapsTimes {
 
   public void setAntennaInfo(String antennaInfo) {
     this.antennaInfo = antennaInfo;
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+
+    private Long id;
+    private String chip;
+    private OffsetDateTime chipTime;
+    private String chipType;
+    private Integer pc;
+    private Integer reader;
+    private String antenna;
+    private Long milliSecs;
+    private String location;
+    private Integer lapRaw;
+    private Long groupId;
+    private Long bibId;
+    private String bibTag;
+    private String batch;
+    private String antennaInfo;
+
+    public Builder id(Long id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder chip(String chip) {
+      this.chip = chip;
+      return this;
+    }
+
+    public Builder chipTime(OffsetDateTime chipTime) {
+      this.chipTime = chipTime;
+      return this;
+    }
+
+    public Builder chipType(String chipType) {
+      this.chipType = chipType;
+      return this;
+    }
+
+    public Builder pc(Integer pc) {
+      this.pc = pc;
+      return this;
+    }
+
+    public Builder reader(Integer reader) {
+      this.reader = reader;
+      return this;
+    }
+
+    public Builder antenna(String antenna) {
+      this.antenna = antenna;
+      return this;
+    }
+
+    public Builder milliSecs(Long milliSecs) {
+      this.milliSecs = milliSecs;
+      return this;
+    }
+
+    public Builder location(String location) {
+      this.location = location;
+      return this;
+    }
+
+    public Builder lapRaw(Integer lapRaw) {
+      this.lapRaw = lapRaw;
+      return this;
+    }
+
+    public Builder groupId(Long groupId) {
+      this.groupId = groupId;
+      return this;
+    }
+
+    public Builder bibId(Long bibId) {
+      this.bibId = bibId;
+      return this;
+    }
+
+    public Builder bibTag(String bibTag) {
+      this.bibTag = bibTag;
+      return this;
+    }
+
+    public Builder batch(String batch) {
+      this.batch = batch;
+      return this;
+    }
+
+    public Builder antennaInfo(String antennaInfo) {
+      this.antennaInfo = antennaInfo;
+      return this;
+    }
+
+    public MylapsTimes build() {
+      return new MylapsTimes(this);
+    }
   }
 }
