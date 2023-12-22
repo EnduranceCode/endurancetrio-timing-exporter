@@ -23,18 +23,17 @@
  *
  */
 
-package com.endurancetrio.timingexporter.repository;
+package com.endurancetrio.timingexporter.repository.mylaps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
-import com.endurancetrio.timingexporter.repository.mylaps.MylapsTimesRepository;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +55,14 @@ class MylapsTimesRepositoryTest {
   MylapsTimesRepository mylapsTimesRepository;
 
   @Test
-  void findRecordsByChipTimeDate() throws ParseException {
-    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-    Date testDate = dateFormatter.parse("1984-08-15");
+  void findByChipTimeBetween() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    LocalDate localDate = LocalDate.parse("1984-08-15", formatter);
+    OffsetDateTime testStartDate = OffsetDateTime.of(localDate, LocalTime.MIN, ZoneOffset.UTC);
+    OffsetDateTime testEndDate = testStartDate.plusDays(1L);
 
-    List<MylapsTimes> mylapsTimes = mylapsTimesRepository.findByChipTimeDate(testDate);
+    List<MylapsTimes> mylapsTimes =
+        mylapsTimesRepository.findByChipTimeBetween(testStartDate, testEndDate);
 
     assertNotNull(mylapsTimesRepository);
     assertEquals(144, mylapsTimes.size());

@@ -26,22 +26,20 @@
 package com.endurancetrio.timingexporter.repository.mylaps;
 
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MylapsTimesRepository extends JpaRepository<MylapsTimes, Long> {
 
   /**
-   * Find the list of MYLAPS Times records for the given date.
+   * Find the list of MYLAPS Times records between the given dates.
    *
-   * @param date the given date
+   * @param start the given start OffsetDateTime
+   * @param end   the given end OffsetDateTime
    * @return the list of MYLAPS Time records of the given date
    */
-  @Query("select mlt from MylapsTimes mlt where date(mlt.chipTime) = :date")
-  List<MylapsTimes> findByChipTimeDate(@Param("date") Date date);
+  List<MylapsTimes> findByChipTimeBetween(OffsetDateTime start, OffsetDateTime end);
 }
