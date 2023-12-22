@@ -26,11 +26,14 @@
 package com.endurancetrio.timingexporter.model.dto.common;
 
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
+import java.io.Serializable;
 import java.time.Instant;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class TimeRecordDTO {
+public class TimeRecordDTO implements Serializable {
+
+  private static final long serialVersionUID = 95819105492811685L;
 
   private String chip;
   private Instant time;
