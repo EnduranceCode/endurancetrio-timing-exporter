@@ -64,7 +64,7 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
   @Override
   public List<TimeRecordDTO> findByChipTimeDate(String date) throws EnduranceTrioException {
 
-    // Get the given date as an OffsetDate time with the earliest possible time
+    // Get the given date as an OffsetDateTime with the earliest possible time
     OffsetDateTime queryStartDate;
     try {
 

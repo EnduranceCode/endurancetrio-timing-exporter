@@ -26,6 +26,7 @@
 package com.endurancetrio.timingexporter.controller.impl;
 
 import com.endurancetrio.timingexporter.controller.MylapsController;
+import com.endurancetrio.timingexporter.model.constants.RestConstants;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
@@ -41,11 +42,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/timing-exporter/mylaps")
+@RequestMapping(
+    RestConstants.API_BASE_URL + RestConstants.API_VERSION_1 + RestConstants.API_RESOURCE_MYLAPS)
 public class MylapsControllerImpl implements MylapsController {
 
-  private static final String STATUS_SUCCESS_MESSAGE = "OK";
-  private static final String HTTP_OK_CODE = String.valueOf(HttpStatus.OK);
+  private static final String MSG_STATUS_OK = RestConstants.MSG_STATUS_OK;
+  private static final String MSG_CODE_OK = RestConstants.MSG_CODE_OK;
+  private static final String MSG_OK = RestConstants.MSG_SUCCESS;
 
   private final MylapsTimesService mylapsTimesService;
 
@@ -62,6 +65,6 @@ public class MylapsControllerImpl implements MylapsController {
 
     List<TimeRecordDTO> data = mylapsTimesService.findByChipTimeDate(date);
 
-    return new EnduranceTrioResponse<>(STATUS_SUCCESS_MESSAGE, HTTP_OK_CODE, "OK", data);
+    return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
   }
 }

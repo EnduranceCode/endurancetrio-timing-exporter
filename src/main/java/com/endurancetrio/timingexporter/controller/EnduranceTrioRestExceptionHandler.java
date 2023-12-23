@@ -25,6 +25,7 @@
 
 package com.endurancetrio.timingexporter.controller;
 
+import com.endurancetrio.timingexporter.model.constants.RestConstants;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -41,16 +42,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class EnduranceTrioRestExceptionHandler {
 
-  private static final String STATUS_ERROR_MESSAGE = "ERROR";
-  private static final String HTTP_SERVER_ERROR_CODE = HttpStatus.INTERNAL_SERVER_ERROR.toString();
+  private static final String MSG_STATUS_ERROR = RestConstants.MSG_STATUS_ERROR;
+  private static final String MSG_CODE_ERROR = RestConstants.MSG_CODE_ERROR;
 
   @ExceptionHandler({Exception.class})
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ResponseBody
   public EnduranceTrioResponse unhandledErrors(HttpServletRequest request, Exception exception) {
 
-    return new EnduranceTrioResponse(
-        STATUS_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR.toString(), exception.getMessage());
+    return new EnduranceTrioResponse(MSG_STATUS_ERROR, MSG_CODE_ERROR, exception.getMessage());
   }
 
   @ExceptionHandler({EnduranceTrioException.class, EmptyResultDataAccessException.class,
@@ -61,7 +61,7 @@ public class EnduranceTrioRestExceptionHandler {
 
     response.setStatus(exception.getCode());
 
-    return new EnduranceTrioResponse(STATUS_ERROR_MESSAGE, HTTP_SERVER_ERROR_CODE,
-                                     exception.getMessage(), exception.getErrors());
+    return new EnduranceTrioResponse(MSG_STATUS_ERROR, MSG_CODE_ERROR, exception.getMessage(),
+                                     exception.getErrors());
   }
 }
