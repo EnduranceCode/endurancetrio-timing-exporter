@@ -32,14 +32,14 @@ package com.endurancetrio.timingexporter.model.entity.common;
  * length of exactly two characters.
  */
 public enum EnduranceTrioWaypoint {
-  // Checkin
+  // Check-in
   CI,
-  // Start line
+  // Start Line
   SL,
   WA,
   WB,
   WC,
   WD,
-  // Finish line
+  // Finish Line
   FL;
 }

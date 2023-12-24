@@ -26,6 +26,7 @@
 package com.endurancetrio.timingexporter.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
@@ -47,10 +48,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class TimeRecordMapperTest {
 
   @InjectMocks
-  private TimeRecordMapper timeRecordMapper;
+  TimeRecordMapper timeRecordMapper;
 
-  private MylapsTimes mylapsTestEntity;
-  private TimeRecordDTO expectedDto;
+  MylapsTimes mylapsTestEntity;
+  TimeRecordDTO expectedDto;
 
   @BeforeEach
   void setUp() {
@@ -63,22 +64,31 @@ class TimeRecordMapperTest {
         MylapsTimes.builder().chip("AAAAAAA").chipTime(testChipTime).milliSecs(testTimeMilliseconds)
                    .location("SL: Start line").lapRaw(1).build();
     expectedDto =
-        TimeRecordDTO.builder().chip("AAAAAAA").time(testInstant).waypoint(EnduranceTrioWaypoint.SL).lap(1)
-                     .build();
+        TimeRecordDTO.builder().chip("AAAAAAA").time(testInstant).waypoint(EnduranceTrioWaypoint.SL)
+                     .lap(1).build();
   }
 
   @Test
-  void entityToDto() {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    LocalDate localDate = LocalDate.parse("1984-08-15", formatter);
-    OffsetDateTime earliestDateTimeOfDate =
-        OffsetDateTime.of(localDate, LocalTime.MIN, ZoneOffset.UTC);
+  void entityToDtoWithValidLocation() {
 
     TimeRecordDTO dto = timeRecordMapper.map(mylapsTestEntity);
 
     assertEquals(expectedDto.getChip(), dto.getChip());
     assertEquals(expectedDto.getTime(), dto.getTime());
     assertEquals(expectedDto.getWaypoint(), dto.getWaypoint());
+    assertEquals(expectedDto.getLap(), dto.getLap());
+  }
+
+  @Test
+  void entityToDtoWithInvalidLocation() {
+
+    mylapsTestEntity.setLocation("UNKNOWN");
+    TimeRecordDTO dto = timeRecordMapper.map(mylapsTestEntity);
+
+    assertEquals(expectedDto.getChip(), dto.getChip());
+    assertEquals(expectedDto.getTime(), dto.getTime());
+    assertNull(dto.getWaypoint());
+    assertEquals("UNKNOWN", dto.getLocation());
     assertEquals(expectedDto.getLap(), dto.getLap());
   }
 }

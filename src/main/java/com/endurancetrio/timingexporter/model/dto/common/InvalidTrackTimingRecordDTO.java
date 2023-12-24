@@ -25,37 +25,33 @@
 
 package com.endurancetrio.timingexporter.model.dto.common;
 
-import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.io.Serializable;
 import java.time.Instant;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Timing data on a waypoint.
+ * Timing data obtained from a Timing Record registered with an invalid location.
+ * <p/>
+ * An invalid location is a location that can't be converted into one of the EnduranceTrio Timing
+ * Exporter valid waypoints.
  */
-public class TimeRecordDTO implements Serializable {
+public class InvalidTrackTimingRecordDTO implements Serializable {
 
-  private static final long serialVersionUID = 95819105492811685L;
+  private static final long serialVersionUID = 628486747744547696L;
 
   private String chip;
   private Instant time;
-  @JsonInclude(Include.NON_NULL)
-  private EnduranceTrioWaypoint waypoint;
-  @JsonInclude(Include.NON_NULL)
   private String location;
   private Integer lap;
 
-  public TimeRecordDTO() {
+  public InvalidTrackTimingRecordDTO() {
     super();
   }
 
-  public TimeRecordDTO(Builder builder) {
+  public InvalidTrackTimingRecordDTO(Builder builder) {
     this.chip = builder.chip;
     this.time = builder.time;
-    this.waypoint = builder.waypoint;
     this.location = builder.location;
     this.lap = builder.lap;
   }
@@ -74,15 +70,6 @@ public class TimeRecordDTO implements Serializable {
 
   public void setTime(Instant time) {
     this.time = time;
-  }
-
-  public EnduranceTrioWaypoint getWaypoint() {
-    return waypoint;
-  }
-
-  public TimeRecordDTO setWaypoint(EnduranceTrioWaypoint waypoint) {
-    this.waypoint = waypoint;
-    return this;
   }
 
   public String getLocation() {
@@ -107,31 +94,26 @@ public class TimeRecordDTO implements Serializable {
       return true;
     }
 
-    if (!(o instanceof TimeRecordDTO)) {
+    if (!(o instanceof InvalidTrackTimingRecordDTO)) {
       return false;
     }
 
-    TimeRecordDTO that = (TimeRecordDTO) o;
+    InvalidTrackTimingRecordDTO that = (InvalidTrackTimingRecordDTO) o;
 
     return new EqualsBuilder().append(chip, that.chip).append(time, that.time)
-                              .append(waypoint, that.waypoint).append(lap, that.lap).isEquals();
+                              .append(location, that.location).append(lap, that.lap).isEquals();
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(chip).append(time).append(waypoint).append(lap)
+    return new HashCodeBuilder(17, 37).append(chip).append(time).append(location).append(lap)
                                       .toHashCode();
-  }
-
-  public static Builder builder() {
-    return new Builder();
   }
 
   public static class Builder {
 
     private String chip;
     private Instant time;
-    private EnduranceTrioWaypoint waypoint;
     private String location;
     private Integer lap;
 
@@ -145,11 +127,6 @@ public class TimeRecordDTO implements Serializable {
       return this;
     }
 
-    public Builder waypoint(EnduranceTrioWaypoint waypoint) {
-      this.waypoint = waypoint;
-      return this;
-    }
-
     public Builder location(String location) {
       this.location = location;
       return this;
@@ -160,8 +137,8 @@ public class TimeRecordDTO implements Serializable {
       return this;
     }
 
-    public TimeRecordDTO build() {
-      return new TimeRecordDTO(this);
+    public InvalidTrackTimingRecordDTO build() {
+      return new InvalidTrackTimingRecordDTO(this);
     }
   }
 }

@@ -70,8 +70,9 @@ public class TimeRecordMapper {
     } catch (IllegalArgumentException exception) {
 
       // When the registered location is NOT valid, the waypoint it is NOT included in the
-      // custom time record
-      return TimeRecordDTO.builder().chip(entity.getChip()).time(instant).lap(entity.getLapRaw())
+      // custom time record and the location is added
+      return TimeRecordDTO.builder().chip(entity.getChip()).time(instant)
+                          .location(entity.getLocation()).lap(entity.getLapRaw())
                           .build();
     }
   }
