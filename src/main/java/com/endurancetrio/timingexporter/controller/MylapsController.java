@@ -25,7 +25,9 @@
 
 package com.endurancetrio.timingexporter.controller;
 
+import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
 import java.util.List;
@@ -36,11 +38,20 @@ public interface MylapsController {
    * Find the MYLAPS times records for the given day and returns the retrieved records converted
    * into the system's time record type.
    *
-   * @param date the given day
+   * @param date the given date
    * @return the  MYLAPS times records for the given day converted into the system's time record
    * type
    * @throws EnduranceTrioException the custom exception
    */
   EnduranceTrioResponse<List<TimeRecordDTO>> findTimeRecordsByDate(String date)
       throws EnduranceTrioException;
+
+  /**
+   * Finds the timing data from a five waypoints track on the given date.
+   *
+   * @param date the given date
+   * @return the timing data from a five waypoints track on the given date
+   */
+  EnduranceTrioResponse<TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO>> findFiveWaypointsRaceRecord(
+      String date) throws EnduranceTrioException;
 }

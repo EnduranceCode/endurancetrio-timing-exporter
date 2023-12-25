@@ -27,6 +27,8 @@ package com.endurancetrio.timingexporter.controller.impl;
 
 import com.endurancetrio.timingexporter.controller.MylapsController;
 import com.endurancetrio.timingexporter.model.constants.RestConstants;
+import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
+import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
@@ -64,6 +66,18 @@ public class MylapsControllerImpl implements MylapsController {
       throws EnduranceTrioException {
 
     List<TimeRecordDTO> data = mylapsTimesService.findByChipTimeDate(date);
+
+    return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
+  }
+
+  @Override
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping(value = "/five-waypoints/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public EnduranceTrioResponse<TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO>> findFiveWaypointsRaceRecord(
+      @PathVariable String date) throws EnduranceTrioException {
+
+    TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> data =
+        mylapsTimesService.findFiveWaypointsTrackTimingRecord(date);
 
     return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
   }
