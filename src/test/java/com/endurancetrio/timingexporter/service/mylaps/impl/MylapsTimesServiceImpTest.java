@@ -54,19 +54,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class MylapsTimesServiceImpTest {
 
   @InjectMocks
-  private MylapsTimesServiceImp mylapsTimesService;
+  MylapsTimesServiceImp mylapsTimesService;
 
   @Mock
-  private MylapsTimesRepository mylapsTimesRepository;
+  MylapsTimesRepository mylapsTimesRepository;
 
   @Mock
-  private TimeRecordMapper timeRecordMapper;
+  TimeRecordMapper timeRecordMapper;
 
-  private final List<MylapsTimes> testData = new ArrayList<>();
-  private MylapsTimes testMylapsTimes1;
-  private MylapsTimes testMylapsTimes2;
-  private MylapsTimes testMylapsTimes3;
-  private MylapsTimes testMylapsTimes9;
+  final List<MylapsTimes> testData = new ArrayList<>();
+  MylapsTimes testMylapsTimes1;
+  MylapsTimes testMylapsTimes2;
+  MylapsTimes testMylapsTimes3;
+  MylapsTimes testMylapsTimes9;
 
   @BeforeEach
   void setUp() {
@@ -89,10 +89,6 @@ class MylapsTimesServiceImpTest {
 
     testData.addAll(
         List.of(testMylapsTimes1, testMylapsTimes2, testMylapsTimes3, testMylapsTimes9));
-  }
-
-  @AfterEach
-  void tearDown() {
   }
 
   @Test

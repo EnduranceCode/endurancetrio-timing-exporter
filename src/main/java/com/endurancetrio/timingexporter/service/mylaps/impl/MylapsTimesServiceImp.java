@@ -26,8 +26,11 @@
 package com.endurancetrio.timingexporter.service.mylaps.impl;
 
 import com.endurancetrio.timingexporter.mapper.TimeRecordMapper;
+import com.endurancetrio.timingexporter.mapper.TrackTimingDataMapper;
 import com.endurancetrio.timingexporter.model.dto.common.ErrorDTO;
+import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioError;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
@@ -50,15 +53,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class MylapsTimesServiceImp implements MylapsTimesService {
 
-  private final TimeRecordMapper timeRecordMapper;
   private final MylapsTimesRepository mylapsTimesRepository;
+  private final TimeRecordMapper timeRecordMapper;
+  private final TrackTimingDataMapper trackTimingDataMapper;
 
   @Autowired
   public MylapsTimesServiceImp(TimeRecordMapper timeRecordMapper,
-      MylapsTimesRepository mylapsTimesRepository) {
+      TrackTimingDataMapper trackTimingDataMapper, MylapsTimesRepository mylapsTimesRepository) {
 
-    this.timeRecordMapper = timeRecordMapper;
     this.mylapsTimesRepository = mylapsTimesRepository;
+    this.timeRecordMapper = timeRecordMapper;
+    this.trackTimingDataMapper = trackTimingDataMapper;
   }
 
   @Override
@@ -83,10 +88,17 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
     final List<MylapsTimes> times =
         mylapsTimesRepository.findByChipTimeBetween(queryStartDate, queryStartDate.plusDays(1L));
 
-    return times.stream()
-                .map(timeRecordMapper::map)
-                .distinct()
+    return times.stream().map(timeRecordMapper::map).distinct()
                 .sorted(Comparator.comparing(TimeRecordDTO::getTime))
                 .collect(Collectors.toCollection(ArrayList::new));
+  }
+
+  @Override
+  public TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> findFiveWaypointsTrackTimingRecord(
+      String date) throws EnduranceTrioException {
+
+    List<TimeRecordDTO> timeRecords = findByChipTimeDate(date);
+
+    return trackTimingDataMapper.map(timeRecords);
   }
 }
