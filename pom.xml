@@ -46,7 +46,7 @@
 
   <groupId>com.endurancetrio</groupId>
   <artifactId>timing-exporter</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
 
   <name>EnduranceTrio Timing Exporter</name>
   <description>Collects and manages race timing data</description>
