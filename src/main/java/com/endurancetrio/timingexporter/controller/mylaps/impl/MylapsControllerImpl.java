@@ -23,13 +23,13 @@
  *
  */
 
-package com.endurancetrio.timingexporter.controller.impl;
+package com.endurancetrio.timingexporter.controller.mylaps.impl;
 
-import com.endurancetrio.timingexporter.controller.MylapsController;
-import com.endurancetrio.timingexporter.model.constants.RestConstants;
-import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
+import com.endurancetrio.timingexporter.controller.mylaps.MylapsController;
+import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
 import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
 import com.endurancetrio.timingexporter.service.mylaps.MylapsTimesService;
@@ -44,12 +44,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(RestConstants.API_VERSION_1 + RestConstants.API_RESOURCE_MYLAPS)
+@RequestMapping(ControllerConstants.API_VERSION_1 + ControllerConstants.API_RESOURCE_MYLAPS)
 public class MylapsControllerImpl implements MylapsController {
 
-  private static final String MSG_STATUS_OK = RestConstants.MSG_STATUS_OK;
-  private static final String MSG_CODE_OK = RestConstants.MSG_CODE_OK;
-  private static final String MSG_OK = RestConstants.MSG_SUCCESS;
+  private static final String MSG_STATUS_OK = ControllerConstants.MSG_STATUS_OK;
+  private static final String MSG_CODE_OK = ControllerConstants.MSG_CODE_OK;
+  private static final String MSG_OK = ControllerConstants.MSG_SUCCESS;
 
   private final MylapsTimesService mylapsTimesService;
 

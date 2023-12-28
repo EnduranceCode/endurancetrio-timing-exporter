@@ -23,23 +23,27 @@
  *
  */
 
-package com.endurancetrio.timingexporter.model.constants;
+package com.endurancetrio.timingexporter.controller.main.impl;
 
-import org.springframework.http.HttpStatus;
+import com.endurancetrio.timingexporter.controller.main.StaticController;
+import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-public class RestConstants {
+@Controller
+public class StaticControllerImpl implements StaticController {
 
-  public static final String API_BASE_URL = "/timing-exporter";
-  public static final String API_VERSION_1 = "/v1";
-  public static final String API_RESOURCE_MYLAPS = "/mylaps";
+  private static final String LOGO_PAGE = "endurancetrio/index.html";
 
-  public static final String MSG_STATUS_OK = HttpStatus.OK.getReasonPhrase();
-  public static final String MSG_STATUS_ERROR = "ERROR";
-  public static final String MSG_CODE_OK = String.valueOf(HttpStatus.OK.value());
-  public static final String MSG_CODE_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.toString();
-  public static final String MSG_SUCCESS = "Request handled with success";
+  @Override
+  @RequestMapping(ControllerConstants.ROOT_URL)
+  public String homePage() {
+    return LOGO_PAGE;
+  }
 
-  private RestConstants() {
-    throw new IllegalStateException("Utility Class");
+  @Override
+  @RequestMapping(ControllerConstants.ROOT_URL + ControllerConstants.API_VERSION_1)
+  public String apiVersionOnePage() {
+    return LOGO_PAGE;
   }
 }

@@ -25,7 +25,7 @@
 
 package com.endurancetrio.timingexporter.controller;
 
-import com.endurancetrio.timingexporter.model.constants.RestConstants;
+import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +42,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class EnduranceTrioRestExceptionHandler {
 
-  private static final String MSG_STATUS_ERROR = RestConstants.MSG_STATUS_ERROR;
-  private static final String MSG_CODE_ERROR = RestConstants.MSG_CODE_ERROR;
+  private static final String MSG_STATUS_ERROR = ControllerConstants.MSG_STATUS_ERROR;
+  private static final String MSG_CODE_ERROR = ControllerConstants.MSG_CODE_ERROR;
 
   @ExceptionHandler({Exception.class})
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

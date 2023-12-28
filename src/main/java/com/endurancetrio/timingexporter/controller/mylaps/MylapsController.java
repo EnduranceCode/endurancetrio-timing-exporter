@@ -23,7 +23,7 @@
  *
  */
 
-package com.endurancetrio.timingexporter.controller;
+package com.endurancetrio.timingexporter.controller.mylaps;
 
 import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
