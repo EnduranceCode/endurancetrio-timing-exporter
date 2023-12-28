@@ -44,8 +44,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(
-    RestConstants.API_BASE_URL + RestConstants.API_VERSION_1 + RestConstants.API_RESOURCE_MYLAPS)
+@RequestMapping(RestConstants.API_VERSION_1 + RestConstants.API_RESOURCE_MYLAPS)
 public class MylapsControllerImpl implements MylapsController {
 
   private static final String MSG_STATUS_OK = RestConstants.MSG_STATUS_OK;
