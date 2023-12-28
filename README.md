@@ -32,7 +32,7 @@ application and uses a [MySQL](https://www.mysql.com/) database.
 #### Clone the repository
 
 Make sure that you have [Java 11](https://javaalmanac.io/jdk/11/) and
-[MySQL](https://www.mysql.com/) installed in your development machine and then clone the repository
+[MySQL](https://www.mysql.com/) installed in your development machine and then clone this repository
 with the following command:
 
     git clone git@github.com:EnduranceCode/endurancetrio-timing-exporter.git
@@ -42,8 +42,8 @@ with the following command:
 #### Set the MySQL Server Time Zone to UTC+00:00
 
 [Set MySQL server time zone](https://www.scaler.com/topics/mysql-time-zone/) to UTC+00:00 in your
-server configuration `my.cnf` file. For an Ubuntu server, to open the `/etc/mysql/my.cnf` file,
-execute the upcoming command.
+server configuration `my.cnf` file. On Ubuntu, open the `/etc/mysql/my.cnf` file executing the
+following command:
 
     sudo nano /etc/mysql/my.cnf
 
@@ -84,8 +84,9 @@ command as appropriate and then execute it.
 
 ##### Grant privileges to the EnduranceTrio Timing Exporter MySQL user
 
-To [grant the necessary privileges to the created user in the MySQL Server](https://www.mysqltutorial.org/mysql-grant.aspx),
-replace the ***{LABELS}*** in the below command as appropriate and then execute it.
+To [grant the necessary privileges](https://www.mysqltutorial.org/mysql-grant.aspx) to the
+**EnduranceTrio Timing Exporter** database user, replace the ***{LABELS}*** in the below command as
+appropriate and then execute it.
 
     GRANT ALL PRIVILEGES ON {DATABASE_NAME}.* TO '{USERNAME}'@'localhost';
 
@@ -96,14 +97,17 @@ replace the ***{LABELS}*** in the below command as appropriate and then execute 
 
 ##### Configure the application's database access
 
-To configure the application's access to the database, take the following steps:
+To configure the **EnduranceTrio Timing Exporter**  access to the database, take the following
+steps:
 
-1. Copy the file [`confidential-template.yaml`](./src/main/resources/confidential-template.yaml) and
+1. Copy the file [`confidential-template.yaml`](./src/main/resources/confidential-template.yaml)
    located in the `resources` folder and rename it to `confidential.yaml`;
-2. Replace the {DATABASE_NAME} placeholder with the application database name;
-3. Replace the {DATABASE_USER} placeholder with the application database user's username;
-4. Replace the {DATABASE_NAME} placeholder with the application database user's password;
-5. Delete this comments block at the top of the file that contains these instructions.
+2. Replace the {DATABASE_NAME} placeholder with the **EnduranceTrio Timing Exporter** database name;
+3. Replace the {DATABASE_USER} placeholder with the **EnduranceTrio Timing Exporter** database
+   user's username;
+4. Replace the {DATABASE_NAME} placeholder with the **EnduranceTrio Timing Exporter**database user's
+   password;
+5. Delete the comments block, at the top of the file, that contains these instructions.
 
 ##### Manage the application's database migrations
 
@@ -118,23 +122,22 @@ Ubuntu server using Apache as a reverse proxy.
 
 ### Prerequisites
 
-- [Java 11](https://javaalmanac.io/jdk/11/) or later installed and configured on your
-  **Ubuntu** server;
+- [Java 11](https://javaalmanac.io/jdk/11/) or later installed and configured on the Ubuntu server;
 - [Apache Server](https://httpd.apache.org/)
   [installed and configured](https://github.com/EnduranceCode/server-setup-guide/blob/master/02-apache-server-installation.md#21-install-apache)
-  on your **Ubuntu** server;
+  on the Ubuntu server;
 - [MySQL Server](https://httpd.apache.org/)
   [installed and configured](https://github.com/EnduranceCode/server-setup-guide/blob/master/03-mysql-server-installation.md#3-mysql-server-installation)
-  on your **Ubuntu** server;
-- A domain or subdomain pointing to your server's IP address;
+  on the Ubuntu server;
+- A domain or subdomain pointing to the server's IP address;
 - (Optional) Let's Encrypt SSL certificate for secure connections;
 
 ### Server setup
 
 #### Database setup
 
-To create the application's database and the application's database user, replace the ***{LABELS}***
-in the upcoming commands as appropriate and then execute it on your **Ubuntu** server.
+To create the **EnduranceTrio Timing Exporter** database and user, replace the ***{LABELS}*** in the
+upcoming commands as appropriate and then execute it on the Ubuntu server.
 
     CREATE DATABASE {DATABASE_NAME} CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
     CREATE USER '{USERNAME}'@'localhost' IDENTIFIED WITH caching_sha2_password BY '{PASSWORD}';
@@ -153,7 +156,7 @@ by [MYLAPS](https://www.mylaps.com/) devices, but it can only access this data w
 the **EnduranceTrio Timing Exporter** database is added as an *exporter* of
 the [Timing & Scoring Software](https://www.mylaps.com/timing-scoring-software/) application. With
 this procedure, the [Timing & Scoring Software](https://www.mylaps.com/timing-scoring-software/)
-application will be able to write the data, it collects from the [MYLAPS](https://www.mylaps.com/)
+application will be able to write the data, collected from the [MYLAPS](https://www.mylaps.com/)
 decoders, into the **EnduranceTrio Timing Exporter** database.
 
 To follow the [least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)
@@ -171,7 +174,7 @@ tables are the following:
 
 To create the [Timing & Scoring Software](https://www.mylaps.com/timing-scoring-software/) user
 on the **EnduranceTrio Timing Exporter** database, login into the [MySQL](https://www.mysql.com/)
-server and replace the ***{LABELS}*** in the below commands as appropriate and then execute it.
+server, replace the ***{LABELS}*** in the below commands as appropriate and then execute it.
 
     CREATE USER '{USERNAME}'@'{HOST}' IDENTIFIED WITH caching_sha2_password BY '{PASSWORD}';
     GRANT INSERT ON {DATABASE_NAME}.Chip TO '{USERNAME}'@'{HOST}';
@@ -218,14 +221,14 @@ Add the user's password and the additional required information as prompted.
 > **Label Definition**
 >
 > + **{APP_USER}** : The Linux user that wil execute the **EnduranceTrio Timing Exporter** app on
-    your **Ubuntu** server, e.g. `timing-exporter`;
+    the Ubuntu server, e.g. `timing-exporter`;
 
 #### Create a folder to store the EnduranceTrio Timing Exporter JAR file
 
-There isn't a strict rule on the "best" folder to store the application's JAR file on an **Ubuntu**
+There isn't a strict rule on the "best" folder to store an application's JAR file on an Ubuntu
 server, but the `/opt` folder is often used for installing third-party software or packages.
 
-To create a folder to store the **EnduranceTrio Timing Exporter** JAR file on your **Ubuntu** server
+To create a folder to store the **EnduranceTrio Timing Exporter** JAR file on the Ubuntu server
 and set the correct Linux owner and group, replace the ***{LABELS}*** in the upcoming command as
 appropriate and then execute it.
 
@@ -234,8 +237,8 @@ appropriate and then execute it.
 
 > **Label Definition**
 >
-> + **{APP_USER}** : The Linux user that will execute the **EnduranceTrio Timing Exporter** app on
-    your **Ubuntu** server, e.g. `timing-exporter`;
+> + **{APP_USER}** : The Linux user that wil execute the **EnduranceTrio Timing Exporter** app on
+    the Ubuntu server, e.g. `timing-exporter`;
 
 ### Build and installation
 
@@ -247,18 +250,18 @@ To build the JAR file, execute, from the root folder of this repository, the fol
 
 #### Copy the EnduranceTrio Timing Exporter JAR file to your Ubuntu server
 
-Copy the JAR file, generated on the previous step, to your **Ubuntu** server. To use SCP to copy the
-file, which is probably the best approach, replace the ***{LABELS}*** in the upcoming command as
-appropriate and then execute it from the root folder of this repository.
+Copy the JAR file, generated on the previous step, to the Ubuntu server. Use SCP to copy the
+file. Replace the ***{LABELS}*** in the upcoming command as appropriate and then execute it from the
+root folder of this repository.
 
     scp target/timing-exporter*.jar {REMOTE_USERNAME}@{SERVER_IP}:~/timing-exporter.jar
 
 > **Label Definition**
 >
-> + **{REMOTE_USERNAME}** : The Linux user on the on your **Ubuntu** server;
-> + **{SERVER_IP}** : Your **Ubuntu** server IP address;
+> + **{REMOTE_USERNAME}** : The Linux user on the Ubuntu server;
+> + **{SERVER_IP}** : The Ubuntu server IP address;
 
-On your **Ubuntu** server, replace the ***{LABELS}*** in the upcoming command as appropriate and
+On the Ubuntu server, replace the ***{LABELS}*** in the upcoming command as appropriate and
 then execute it to copy the **EnduranceTrio Timing Exporter** JAR file to the previously created
 folder.
 
@@ -268,17 +271,17 @@ folder.
 
 > **Label Definition**
 >
-> + **{APP_USER}** : The Linux user that will execute the **EnduranceTrio Timing Exporter** app on
-    your **Ubuntu** server, e.g. `timing-exporter`;
+> + **{APP_USER}** : The Linux user that wil execute the **EnduranceTrio Timing Exporter** app on
+    the Ubuntu server, e.g. `timing-exporter`;
 
 #### systemd setup
 
-We will run the **EnduranceTrio Timing Exporter** application as a systemd service on your
-**Ubuntu** server. This will make the application more reliable, due to the additional resilience
-to failures of our setup.
+We will run the **EnduranceTrio Timing Exporter** application as a *systemd* service on the Ubunt
+server. This will make the application more reliable, due to the additional resilience to failures
+of our setup.
 
-To create a systemd service file (`timing-exporter.service`) in the folder `/etc/systemd/system/` of
-your **Ubuntu** server, use the following command:
+To create a *systemd* service file (`timing-exporter.service`) in the folder `/etc/systemd/system/`
+of the Ubuntu server, use the following command:
 
     sudo nano /etc/systemd/system/timing-exporter.service
 
@@ -328,7 +331,7 @@ application, you need to enable the modules `proxy` and `mod_proxy` with the fol
 
 Assuming that you already have a
 [Virtual Host configured](https://github.com/EnduranceCode/server-setup-guide/blob/master/05-server-management.md#51-apache--create-a-virtual-host)
-on your **Ubuntu** server, open the Virtual Host configuration file and add the bellow code snippet
+on the Ubuntu server, open the Virtual Host configuration file and add the bellow code snippet
 after the `DocumentRoot` directive.
 
         ProxyPreserveHost On                                                                                                                                                                 
