@@ -23,27 +23,18 @@
  *
  */
 
-package com.endurancetrio.timingexporter.controller.main.impl;
+package com.endurancetrio.timingexporter.controller;
 
-import com.endurancetrio.timingexporter.controller.main.StaticController;
-import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class StaticControllerImpl implements StaticController {
+public class EnduranceTrioErrorController implements ErrorController {
 
-  private static final String LOGO_PAGE = "endurancetrio/logo.html";
+  @RequestMapping("/error")
+  public String handleError() {
 
-  @Override
-  @RequestMapping(ControllerConstants.ROOT_URL)
-  public String homePage() {
-    return LOGO_PAGE;
-  }
-
-  @Override
-  @RequestMapping(ControllerConstants.ROOT_URL + ControllerConstants.API_VERSION_1)
-  public String apiVersionOnePage() {
-    return LOGO_PAGE;
+    return "endurancetrio/logo";
   }
 }

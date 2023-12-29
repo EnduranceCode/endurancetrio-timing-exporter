@@ -27,6 +27,8 @@ flyway:
   migrate-at-start: true
   schemas: DATABASE_NAME  # Defined @ confidential.yaml
 server:
+  error:
+    path: /error
   forward-headers-strategy: native
   port: 8081
   servlet:
@@ -35,7 +37,7 @@ server:
 spring:
   application:
     name: EnduranceTrio Timing Exporter
-    version: 0.2.1
+    version: 0.2.2
   config:
     import: confidential.yaml
 
