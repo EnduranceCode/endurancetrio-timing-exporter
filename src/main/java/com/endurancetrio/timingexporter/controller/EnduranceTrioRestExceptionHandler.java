@@ -26,8 +26,10 @@
 package com.endurancetrio.timingexporter.controller;
 
 import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
+import com.endurancetrio.timingexporter.model.dto.common.ErrorDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -39,8 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-@SuppressWarnings({"rawtypes", "unchecked"})
-public class EnduranceTrioRestExceptionHandler {
+public class EnduranceTrioRestExceptionHandler<T> {
 
   private static final String MSG_STATUS_ERROR = ControllerConstants.MSG_STATUS_ERROR;
   private static final String MSG_CODE_ERROR = ControllerConstants.MSG_CODE_ERROR;
@@ -48,20 +49,21 @@ public class EnduranceTrioRestExceptionHandler {
   @ExceptionHandler({Exception.class})
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ResponseBody
-  public EnduranceTrioResponse unhandledErrors(HttpServletRequest request, Exception exception) {
+  public EnduranceTrioResponse<T> unhandledException(HttpServletRequest request,
+      Exception exception) {
 
-    return new EnduranceTrioResponse(MSG_STATUS_ERROR, MSG_CODE_ERROR, exception.getMessage());
+    return new EnduranceTrioResponse<>(MSG_STATUS_ERROR, MSG_CODE_ERROR, exception.getMessage());
   }
 
   @ExceptionHandler({EnduranceTrioException.class, EmptyResultDataAccessException.class,
       HttpMessageNotReadableException.class})
   @ResponseBody
-  public EnduranceTrioResponse handledException(final HttpServletRequest request,
+  public EnduranceTrioResponse<List<ErrorDTO>> handledException(final HttpServletRequest request,
       final HttpServletResponse response, final EnduranceTrioException exception) {
 
     response.setStatus(exception.getCode());
 
-    return new EnduranceTrioResponse(MSG_STATUS_ERROR, MSG_CODE_ERROR, exception.getMessage(),
-                                     exception.getErrors());
+    return new EnduranceTrioResponse<>(MSG_STATUS_ERROR, MSG_CODE_ERROR, exception.getMessage(),
+                                       exception.getErrors());
   }
 }

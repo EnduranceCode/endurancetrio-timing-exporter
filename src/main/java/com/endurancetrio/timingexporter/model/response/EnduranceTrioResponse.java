@@ -27,6 +27,7 @@ package com.endurancetrio.timingexporter.model.response;
 
 import java.io.Serializable;
 
+@SuppressWarnings("java:S1948")
 public class EnduranceTrioResponse<T> implements Serializable {
 
   private static final long serialVersionUID = 6039994098197597352L;
