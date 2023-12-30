@@ -41,9 +41,9 @@ with the following command:
 
 #### Set the MySQL Server Time Zone to UTC+00:00
 
-[Set MySQL server time zone](https://www.scaler.com/topics/mysql-time-zone/) to UTC+00:00 in your
-server configuration `my.cnf` file. On Ubuntu, open the `/etc/mysql/my.cnf` file executing the
-following command:
+[Set MySQL server time zone](https://www.scaler.com/topics/mysql-time-zone/) to `UTC+00:00` in your
+server configuration `my.cnf` file. On Ubuntu, open the `/etc/mysql/my.cnf` file with
+the [nano text editor](https://www.nano-editor.org/) executing the following command:
 
     sudo nano /etc/mysql/my.cnf
 
@@ -52,9 +52,14 @@ If the `my.cnf` file doesn't have the `[mysqld]` section, add it as shown below:
     [mysqld]
     default-time-zone='+00:00'
 
-To apply the changes, restart the MySQL server with the following command:
+Save the modifications with the command `CTRL + O` and then exit
+the [nano text editor](https://www.nano-editor.org/) with the command `CTRL + X`.
 
-    sudo service mysql restart
+To apply the changes, restart the MySQL service and verify that everything is working as expected
+with the following commands:
+
+    sudo systemctl restart mysql
+    systemctl status mysql
 
 ##### Create a MySQL database
 
@@ -136,6 +141,10 @@ Ubuntu server using Apache as a reverse proxy.
 
 #### Database setup
 
+Set the MySQL Server Time Zone to `UTC+00:00` as explained on
+the [Development database setup section](#set-the-mysql-server-time-zone-to-utc00--00) of this
+document.
+
 To create the **EnduranceTrio Timing Exporter** database and user, replace the ***{LABELS}*** in the
 upcoming commands as appropriate and then execute it on the Ubuntu server.
 
@@ -204,6 +213,33 @@ server, replace the ***{LABELS}*** in the below commands as appropriate and then
 > ***{LABEL}*** should be replaced with `localhost`. When the
 > [`SSH`](https://en.wikipedia.org/wiki/Secure_Shell) connection is not possible, the **{HOST}**
 > ***{LABEL}*** must be replaced with `%` to provide access from all IPs.
+
+To allow
+the [remote connection](https://www.digitalocean.com/community/tutorials/how-to-allow-remote-access-to-mysql)
+of the [Timing & Scoring Software](https://www.mylaps.com/timing-scoring-software/) application to
+the **EnduranceTrio Timing Exporter** database, you will also need to edit the MySQL server
+configuration. Open the MySQL main configuration file (`mysqld.cnf`) with
+the [nano text editor](https://www.nano-editor.org/) using the following command:
+
+    sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+Then, add (or edit) the following snippet inside [mysqld] section:
+
+    bind-address = 0.0.0.0
+
+Save the modifications with the command `CTRL + O` and then exit
+the [nano text editor](https://www.nano-editor.org/) with the command `CTRL + X`.
+
+To apply the changes, restart the MySQL service and verify that everything is working as expected
+with the following commands:
+
+    sudo systemctl restart mysql
+    systemctl status mysql
+
+Finally, execute the upcoming command to configure the [ufw](https://launchpad.net/ufw) firewall to
+allow connections, to the MySQL port 3306, from all IP addresses.
+
+    ufw allow 3306/tcp
 
 #### Create a user on the server to execute EnduranceTrio Timing Exporter
 
@@ -307,8 +343,8 @@ previously created file (`timing-exporter.service`).
 > + **{APP_USER}** : The Linux user that will execute the **EnduranceTrio Timing Exporter** app on
     your **Ubuntu** server, e.g. `timing-exporter`;
 
-Save the changes with the command `CTRL + O` and then exit the nano text editor with
-the command `CTRL + X`.
+Save the changes with the command `CTRL + O` and then exit
+the [nano text editor](https://www.nano-editor.org/) with the command `CTRL + X`.
 
 Apply the changes and start the new service using the following commands:
 
@@ -334,14 +370,12 @@ Assuming that you already have a
 on the Ubuntu server, open the Virtual Host configuration file and add the bellow code snippet
 after the `DocumentRoot` directive.
 
-        ProxyPreserveHost On                                                                                                                                                                 
-        ProxyPass /timing-exporter http://localhost:8081/                                                                                                                                    
+        ProxyPreserveHost On
+        ProxyPass /timing-exporter http://localhost:8081/
         ProxyPassReverse /timing-exporter http://localhost:8081/
 
-Save the changes with the command `CTRL + O` and the exit then nano text editor with
-the command `CTRL + X`.
-
-Validate the Apache Server configuration with the following command:
+Save the changes with the changes and close the file. Then, validate the Apache Server configuration
+with the following command:
 
     sudo apachectl configtest
 
