@@ -34,11 +34,11 @@ public class ErrorDTO implements Serializable {
 
   private static final long serialVersionUID = -4623431847864716768L;
 
-  private String name;
+  private String error;
   private String message;
 
   public ErrorDTO(EnduranceTrioError error) {
-    this.name = error.name();
+    this.error = error.name();
     this.message = error.getMessage();
   }
 
@@ -54,20 +54,20 @@ public class ErrorDTO implements Serializable {
 
     ErrorDTO errorDTO = (ErrorDTO) o;
 
-    return new EqualsBuilder().append(name, errorDTO.name).append(message, errorDTO.message).isEquals();
+    return new EqualsBuilder().append(error, errorDTO.error).append(message, errorDTO.message).isEquals();
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(name).append(message).toHashCode();
+    return new HashCodeBuilder(17, 37).append(error).append(message).toHashCode();
   }
 
-  public String getName() {
-    return name;
+  public String getError() {
+    return error;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setError(String error) {
+    this.error = error;
   }
 
   public String getMessage() {
