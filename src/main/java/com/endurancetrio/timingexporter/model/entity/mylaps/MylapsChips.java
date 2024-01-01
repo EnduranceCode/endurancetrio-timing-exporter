@@ -56,7 +56,7 @@ public class MylapsChips {
    * The Pid information sent by MYLAPS Timing & Scoring Software.
    */
   @Column(name = "Pid", nullable = false)
-  private Long pid;
+  private Integer pid;
 
   public String getChip() {
     return chip;
@@ -66,11 +66,11 @@ public class MylapsChips {
     this.chip = chip;
   }
 
-  public Long getPid() {
+  public Integer getPid() {
     return pid;
   }
 
-  public void setPid(Long pid) {
+  public void setPid(Integer pid) {
     this.pid = pid;
   }
 }

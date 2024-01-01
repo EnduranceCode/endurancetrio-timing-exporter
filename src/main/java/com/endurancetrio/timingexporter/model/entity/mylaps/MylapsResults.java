@@ -59,77 +59,7 @@ public class MylapsResults {
    */
   @Id
   @Column(name = "Pid", nullable = false)
-  private Long pid;
-
-  /**
-   * The time, in milliseconds, registered by the MYLAPS decoders at the location named CI in the
-   * MYLAPS Timing & Scoring Software application.
-   * <p/>
-   * CI is an abbreviation for "Check-in". On a triathlon race it will be used to register the time
-   * when the athlete checks-in at the transition area.
-   */
-  @Column(name = "CI")
-  private Long checkIn;
-
-  /**
-   * The time, in milliseconds, registered by the MYLAPS decoders at the location named SL in the
-   * MYLAPS Timing & Scoring Software application.
-   * <p/>
-   * SL is an abbreviation for "Start Line". On a triathlon race it will be used to register the
-   * time when the athlete crosses the start line.
-   */
-  @Column(name = "SL")
-  private Long timeStartLine;
-
-  /**
-   * The time, in milliseconds, registered by the MYLAPS decoders at the location named WA in the
-   * MYLAPS Timing & Scoring Software application.
-   * <p/>
-   * WA is an abbreviation for "Waypoint 1". On a triathlon race it will be used to register the
-   * time when the athlete finishes the swim segment.
-   */
-  @Column(name = "WA")
-  private Long timeWaypointA;
-
-  /**
-   * The time, in milliseconds, registered by the MYLAPS decoders at the location named WB in the
-   * MYLAPS Timing & Scoring Software application.
-   * <p/>
-   * WB is an abbreviation for "Waypoint 2". On a triathlon race it will be used to register the
-   * time when the athlete finishes the first transition.
-   */
-  @Column(name = "WB")
-  private Long timeWaypointB;
-
-  /**
-   * The time, in milliseconds, registered by the MYLAPS decoders at the location named WC in the
-   * MYLAPS Timing & Scoring Software application.
-   * <p/>
-   * WC is an abbreviation for "Waypoint 3". On a triathlon race it will be used to register the
-   * time when the athlete finishes the bike segment.
-   */
-  @Column(name = "WC")
-  private Long timeWaypointC;
-
-  /**
-   * The time, in milliseconds, registered by the MYLAPS decoders at the location named WD in the
-   * MYLAPS Timing & Scoring Software application.
-   * <p/>
-   * WD is an abbreviation for "Waypoint 4". On a triathlon race it will be used to register the
-   * time when the athlete finishes the second transition.
-   */
-  @Column(name = "WD")
-  private Long timeWaypointD;
-
-  /**
-   * The time, in milliseconds, registered by the MYLAPS decoders at the location named FL in the
-   * MYLAPS Timing & Scoring Software application.
-   * <p/>
-   * FL is an abbreviation for "Finish Line". On a triathlon race it wil be used to register the
-   * time when the athlete crosses the finish line.
-   */
-  @Column(name = "FL")
-  private Long timeFinishLine;
+  private Integer pid;
 
   /**
    * The Lap information sent by MYLAPS Timing & Scoring Software.
@@ -150,68 +80,82 @@ public class MylapsResults {
   @Column(name = "Time")
   private Long time;
 
-  public Long getPid() {
+  /**
+   * The time, in milliseconds, registered by the MYLAPS decoders at the location named CI in the
+   * MYLAPS Timing & Scoring Software application.
+   * <p/>
+   * CI is an abbreviation for "Check-in". On a triathlon race it will be used to register the time
+   * when the athlete checks-in at the transition area.
+   */
+  @Column(name = "TimeCI")
+  private Integer checkIn;
+
+  /**
+   * The time, in milliseconds, registered by the MYLAPS decoders at the location named SL in the
+   * MYLAPS Timing & Scoring Software application.
+   * <p/>
+   * SL is an abbreviation for "Start Line". On a triathlon race it will be used to register the
+   * time when the athlete crosses the start line.
+   */
+  @Column(name = "TimeSL")
+  private Integer timeStartLine;
+
+  /**
+   * The time, in milliseconds, registered by the MYLAPS decoders at the location named WA in the
+   * MYLAPS Timing & Scoring Software application.
+   * <p/>
+   * WA is an abbreviation for "Waypoint 1". On a triathlon race it will be used to register the
+   * time when the athlete finishes the swim segment.
+   */
+  @Column(name = "TimeWA")
+  private Integer timeWaypointA;
+
+  /**
+   * The time, in milliseconds, registered by the MYLAPS decoders at the location named WB in the
+   * MYLAPS Timing & Scoring Software application.
+   * <p/>
+   * WB is an abbreviation for "Waypoint 2". On a triathlon race it will be used to register the
+   * time when the athlete finishes the first transition.
+   */
+  @Column(name = "TimeWB")
+  private Integer timeWaypointB;
+
+  /**
+   * The time, in milliseconds, registered by the MYLAPS decoders at the location named WC in the
+   * MYLAPS Timing & Scoring Software application.
+   * <p/>
+   * WC is an abbreviation for "Waypoint 3". On a triathlon race it will be used to register the
+   * time when the athlete finishes the bike segment.
+   */
+  @Column(name = "TimeWC")
+  private Integer timeWaypointC;
+
+  /**
+   * The time, in milliseconds, registered by the MYLAPS decoders at the location named WD in the
+   * MYLAPS Timing & Scoring Software application.
+   * <p/>
+   * WD is an abbreviation for "Waypoint 4". On a triathlon race it will be used to register the
+   * time when the athlete finishes the second transition.
+   */
+  @Column(name = "TimeWD")
+  private Integer timeWaypointD;
+
+  /**
+   * The time, in milliseconds, registered by the MYLAPS decoders at the location named FL in the
+   * MYLAPS Timing & Scoring Software application.
+   * <p/>
+   * FL is an abbreviation for "Finish Line". On a triathlon race it wil be used to register the
+   * time when the athlete crosses the finish line.
+   */
+  @Column(name = "TimeFL")
+  private Integer timeFinishLine;
+
+  public Integer getPid() {
     return pid;
   }
 
-  public void setPid(Long pid) {
+  public void setPid(Integer pid) {
     this.pid = pid;
-  }
-
-  public Long getCheckIn() {
-    return checkIn;
-  }
-
-  public void setCheckIn(Long checkIn) {
-    this.checkIn = checkIn;
-  }
-
-  public Long getTimeStartLine() {
-    return timeStartLine;
-  }
-
-  public void setTimeStartLine(Long timeStartLine) {
-    this.timeStartLine = timeStartLine;
-  }
-
-  public Long getTimeWaypointA() {
-    return timeWaypointA;
-  }
-
-  public void setTimeWaypointA(Long timeWaypointA) {
-    this.timeWaypointA = timeWaypointA;
-  }
-
-  public Long getTimeWaypointB() {
-    return timeWaypointB;
-  }
-
-  public void setTimeWaypointB(Long timeWaypointB) {
-    this.timeWaypointB = timeWaypointB;
-  }
-
-  public Long getTimeWaypointC() {
-    return timeWaypointC;
-  }
-
-  public void setTimeWaypointC(Long timeWaypointC) {
-    this.timeWaypointC = timeWaypointC;
-  }
-
-  public Long getTimeWaypointD() {
-    return timeWaypointD;
-  }
-
-  public void setTimeWaypointD(Long timeWaypointD) {
-    this.timeWaypointD = timeWaypointD;
-  }
-
-  public Long getTimeFinishLine() {
-    return timeFinishLine;
-  }
-
-  public void setTimeFinishLine(Long timeFinishLine) {
-    this.timeFinishLine = timeFinishLine;
   }
 
   public Integer getLap() {
@@ -236,5 +180,61 @@ public class MylapsResults {
 
   public void setTime(Long time) {
     this.time = time;
+  }
+
+  public Integer getCheckIn() {
+    return checkIn;
+  }
+
+  public void setCheckIn(Integer checkIn) {
+    this.checkIn = checkIn;
+  }
+
+  public Integer getTimeStartLine() {
+    return timeStartLine;
+  }
+
+  public void setTimeStartLine(Integer timeStartLine) {
+    this.timeStartLine = timeStartLine;
+  }
+
+  public Integer getTimeWaypointA() {
+    return timeWaypointA;
+  }
+
+  public void setTimeWaypointA(Integer timeWaypointA) {
+    this.timeWaypointA = timeWaypointA;
+  }
+
+  public Integer getTimeWaypointB() {
+    return timeWaypointB;
+  }
+
+  public void setTimeWaypointB(Integer timeWaypointB) {
+    this.timeWaypointB = timeWaypointB;
+  }
+
+  public Integer getTimeWaypointC() {
+    return timeWaypointC;
+  }
+
+  public void setTimeWaypointC(Integer timeWaypointC) {
+    this.timeWaypointC = timeWaypointC;
+  }
+
+  public Integer getTimeWaypointD() {
+    return timeWaypointD;
+  }
+
+  public void setTimeWaypointD(Integer timeWaypointD) {
+    this.timeWaypointD = timeWaypointD;
+  }
+
+  public Integer getTimeFinishLine() {
+    return timeFinishLine;
+  }
+
+  public void setTimeFinishLine(Integer timeFinishLine) {
+    this.timeFinishLine = timeFinishLine;
   }
 }

@@ -75,16 +75,16 @@ class MylapsTimesServiceImpTest {
     OffsetDateTime testChipTime3 = OffsetDateTime.parse("1984-08-15T15:07:12+00:00");
 
     testMylapsTimes1 =
-        MylapsTimes.builder().id(1L).chip("AAAAAAA").chipTime(testChipTime1).milliSecs(54420150L)
+        MylapsTimes.builder().id(1L).chip("AAAAAAA").chipTime(testChipTime1).milliSecs(54420150)
                    .location("WA").lapRaw(1).build();
     testMylapsTimes2 =
-        MylapsTimes.builder().id(2L).chip("AAAAAAB").chipTime(testChipTime2).milliSecs(54426200L)
+        MylapsTimes.builder().id(2L).chip("AAAAAAB").chipTime(testChipTime2).milliSecs(54426200)
                    .location("WA").lapRaw(1).build();
     testMylapsTimes3 =
-        MylapsTimes.builder().id(3L).chip("AAAAAAC").chipTime(testChipTime3).milliSecs(54432250L)
+        MylapsTimes.builder().id(3L).chip("AAAAAAC").chipTime(testChipTime3).milliSecs(54432250)
                    .location("WA").lapRaw(1).build();
     testMylapsTimes9 =
-        MylapsTimes.builder().id(9L).chip("AAAAAAC").chipTime(testChipTime3).milliSecs(54432250L)
+        MylapsTimes.builder().id(9L).chip("AAAAAAC").chipTime(testChipTime3).milliSecs(54432250)
                    .location("WA").lapRaw(1).build();
 
     testData.addAll(

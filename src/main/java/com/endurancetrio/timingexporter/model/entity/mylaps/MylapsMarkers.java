@@ -78,7 +78,7 @@ public class MylapsMarkers {
    * The MilliSecs information sent by MYLAPS Timing & Scoring Software.
    */
   @Column(name = "MilliSecs", nullable = false)
-  private Long milliSecs;
+  private Integer milliSecs;
 
   /**
    * The Location information sent by MYLAPS Timing & Scoring Software.
@@ -124,11 +124,11 @@ public class MylapsMarkers {
     this.markerTime = markerTime;
   }
 
-  public Long getMilliSecs() {
+  public Integer getMilliSecs() {
     return milliSecs;
   }
 
-  public void setMilliSecs(Long milliSecs) {
+  public void setMilliSecs(Integer milliSecs) {
     this.milliSecs = milliSecs;
   }
 

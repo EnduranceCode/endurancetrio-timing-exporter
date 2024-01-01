@@ -58,7 +58,7 @@ public class MylapsNewMail {
    * The Pid information sent by MYLAPS Timing & Scoring Software.
    */
   @Column(name = "Pid", nullable = false)
-  private Long pid;
+  private Integer pid;
 
   /**
    * The Location information sent by MYLAPS Timing & Scoring Software.
@@ -80,11 +80,11 @@ public class MylapsNewMail {
     this.id = id;
   }
 
-  public Long getPid() {
+  public Integer getPid() {
     return pid;
   }
 
-  public void setPid(Long pid) {
+  public void setPid(Integer pid) {
     this.pid = pid;
   }
 

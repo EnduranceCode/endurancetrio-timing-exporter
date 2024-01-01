@@ -32,12 +32,9 @@ import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +52,7 @@ class TimeRecordMapperTest {
 
   @BeforeEach
   void setUp() {
-    long testTimeMilliseconds = 15 * 60 * 60 * 1000;
+    Integer testTimeMilliseconds = 15 * 60 * 60 * 1000;
     LocalDateTime testLocalDateTime = LocalDateTime.of(1984, 8, 15, 15, 0, 0);
     OffsetDateTime testChipTime = OffsetDateTime.of(testLocalDateTime, ZoneOffset.UTC);
     Instant testInstant = testChipTime.toInstant();

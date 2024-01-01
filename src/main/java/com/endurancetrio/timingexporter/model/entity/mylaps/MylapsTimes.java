@@ -110,7 +110,7 @@ public class MylapsTimes {
    * The time, in milliseconds, registered by the MYLAPS devices.
    */
   @Column(name = "MilliSecs", nullable = false)
-  private Long milliSecs;
+  private Integer milliSecs;
 
   /**
    * The Location information sent by MYLAPS Timing & Scoring Software.
@@ -236,11 +236,11 @@ public class MylapsTimes {
     this.antenna = antenna;
   }
 
-  public Long getMilliSecs() {
+  public Integer getMilliSecs() {
     return milliSecs;
   }
 
-  public void setMilliSecs(Long milliSecs) {
+  public void setMilliSecs(Integer milliSecs) {
     this.milliSecs = milliSecs;
   }
 
@@ -313,7 +313,7 @@ public class MylapsTimes {
     private Integer pc;
     private Integer reader;
     private String antenna;
-    private Long milliSecs;
+    private Integer milliSecs;
     private String location;
     private Integer lapRaw;
     private Long groupId;
@@ -357,7 +357,7 @@ public class MylapsTimes {
       return this;
     }
 
-    public Builder milliSecs(Long milliSecs) {
+    public Builder milliSecs(Integer milliSecs) {
       this.milliSecs = milliSecs;
       return this;
     }
