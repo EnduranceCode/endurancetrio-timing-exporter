@@ -186,11 +186,11 @@ on the **EnduranceTrio Timing Exporter** database, login into the [MySQL](https:
 server, replace the ***{LABELS}*** in the below commands as appropriate and then execute it.
 
     CREATE USER '{USERNAME}'@'{HOST}' IDENTIFIED WITH caching_sha2_password BY '{PASSWORD}';
-    GRANT INSERT ON {DATABASE_NAME}.Chip TO '{USERNAME}'@'{HOST}';
-    GRANT INSERT ON {DATABASE_NAME}.Markers TO '{USERNAME}'@'{HOST}';
-    GRANT INSERT ON {DATABASE_NAME}.NewMail TO '{USERNAME}'@'{HOST}';
-    GRANT INSERT ON {DATABASE_NAME}.Results TO '{USERNAME}'@'{HOST}';
-    GRANT INSERT ON {DATABASE_NAME}.Times TO '{USERNAME}'@'{HOST}';
+    GRANT SELECT, INSERT, UPDATE ON {DATABASE_NAME}.Chips TO '{USERNAME}'@'{HOST}';
+    GRANT SELECT, INSERT, UPDATE ON {DATABASE_NAME}.Markers TO '{USERNAME}'@'{HOST}';
+    GRANT SELECT, INSERT, UPDATE ON {DATABASE_NAME}.NewMail TO '{USERNAME}'@'{HOST}';
+    GRANT SELECT, INSERT, UPDATE ON {DATABASE_NAME}.Results TO '{USERNAME}'@'{HOST}';
+    GRANT SELECT, INSERT, UPDATE ON {DATABASE_NAME}.Times TO '{USERNAME}'@'{HOST}';
 
 > **Label Definition**
 >
