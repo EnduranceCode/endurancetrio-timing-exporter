@@ -99,4 +99,24 @@ class TrackTimingDataMapperTest {
     assertEquals(testTime5.toInstant(), result.getValidTrackRecords().get(0).getTimeOnFinishLine());
     assertEquals(testTime1.toInstant(), result.getInvalidTrackRecords().get(0).getTime());
   }
+
+  @Test
+  void mapInvalidTimeRecords() {
+    recordDTO1.setWaypoint(null).setLocation("T1");
+    recordDTO2.setWaypoint(null).setLocation("T2");
+    recordDTO3.setWaypoint(null).setLocation("T3");
+    recordDTO4.setWaypoint(null).setLocation("T4");
+    recordDTO5.setWaypoint(null).setLocation("T5");
+
+    List<TimeRecordDTO> timeRecords =
+        List.of(recordDTO1, recordDTO2, recordDTO3, recordDTO4, recordDTO5, recordDTO9);
+
+    TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> result =
+        trackTimingDataMapper.map(timeRecords);
+
+    assertNotNull(result);
+    assertEquals(0, result.getValidTrackRecords().size());
+    assertEquals(6, result.getInvalidTrackRecords().size());
+    assertEquals(testTime1.toInstant(), result.getInvalidTrackRecords().get(0).getTime());
+  }
 }

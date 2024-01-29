@@ -62,17 +62,27 @@ public class TrackTimingDataMapper {
 
       FiveWaypointsTrackTimingRecordDTO trackRecord = new FiveWaypointsTrackTimingRecordDTO();
 
-      getTimingDataOnCheckIn(fiveWaypoints.getTimesOnCheckIn(), i, trackRecord);
-      getTimingDataOnStartLine(fiveWaypoints.getTimesOnStartLine(), i, trackRecord);
-      getTimingDataOnWaypointA(fiveWaypoints.getTimesOnWaypointA(), i, trackRecord);
-      getTimingDataOnWaypointB(fiveWaypoints.getTimesOnWaypointB(), i, trackRecord);
-      getTimingDataOnWaypointC(fiveWaypoints.getTimesOnWaypointC(), i, trackRecord);
-      getTimingDataOnWaypointD(fiveWaypoints.getTimesOnWaypointD(), i, trackRecord);
-      getTimingDataOnFinishLine(fiveWaypoints.getTimesOnFinishLine(), i, trackRecord);
-      getTimingDataOnInvalidLocation(fiveWaypoints.getTimesOnInvalidLocation(), i,
-                                     invalidTrackTimingRecords);
+      boolean isValid =
+          getCheckInTimingData(fiveWaypoints.getTimesOnCheckIn(), i, trackRecord, false);
+      isValid =
+          getStartLineTimingData(fiveWaypoints.getTimesOnStartLine(), i, trackRecord, isValid);
+      isValid =
+          getWaypointATimingData(fiveWaypoints.getTimesOnWaypointA(), i, trackRecord, isValid);
+      isValid =
+          getWaypointBTimingData(fiveWaypoints.getTimesOnWaypointB(), i, trackRecord, isValid);
+      isValid =
+          getWaypointCTimingData(fiveWaypoints.getTimesOnWaypointC(), i, trackRecord, isValid);
+      isValid =
+          getWaypointDTimingData(fiveWaypoints.getTimesOnWaypointD(), i, trackRecord, isValid);
+      isValid =
+          getFinishLineTimingData(fiveWaypoints.getTimesOnFinishLine(), i, trackRecord, isValid);
 
-      validTrackTimingRecords.add(trackRecord);
+      getInvalidLocationTimingData(
+          fiveWaypoints.getTimesOnInvalidLocation(), i, invalidTrackTimingRecords);
+
+      if (isValid) {
+        validTrackTimingRecords.add(trackRecord);
+      }
     }
 
     TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> trackTimingData =
@@ -158,133 +168,175 @@ public class TrackTimingDataMapper {
    * Populates the given Track Timing Record with the data of the given index on the Check-In Timing
    * Records.
    *
-   * @param timesOnCheckIn the list of timing records obtained on the Check-In waypoint.
-   * @param index          the index of the track's waypoints timing data to be used to populate the
-   *                       given track timing record.
-   * @param trackRecord    the given Track Timing Record.
+   * @param timesOnCheckIn     the list of timing records obtained on the Check-In waypoint.
+   * @param index              the index of the track's waypoints timing data to be used to populate
+   *                           the given track timing record.
+   * @param trackRecord        the given Track Timing Record.
+   * @param isValidTrackRecord the validity of the given trackRecord.
+   * @return the validity of the given trackRecord, true if it contains timing data on anu of its
+   * waypoints and false if it doesn't
    */
-  private static void getTimingDataOnCheckIn(List<TimeRecordDTO> timesOnCheckIn, int index,
-      FiveWaypointsTrackTimingRecordDTO trackRecord) {
+  private static boolean getCheckInTimingData(List<TimeRecordDTO> timesOnCheckIn, int index,
+      FiveWaypointsTrackTimingRecordDTO trackRecord, boolean isValidTrackRecord) {
 
     if (!timesOnCheckIn.isEmpty() && index < timesOnCheckIn.size()) {
       trackRecord.setChipOnCheckIn(timesOnCheckIn.get(index).getChip());
       trackRecord.setTimeOnCheckIn(timesOnCheckIn.get(index).getTime());
       trackRecord.setLapOnCheckIn(timesOnCheckIn.get(index).getLap());
+      return true;
     }
+
+    return isValidTrackRecord;
   }
 
   /**
    * Populates the given Track Timing Record with the data of the given index on the Start Line
    * Timing Records.
    *
-   * @param timesOnStartLine the list of timing records obtained on the Start Line waypoint.
-   * @param index            the index of the track's waypoints timing data to be used to populate
-   *                         the given track timing record.
-   * @param trackRecord      the given Track Timing Record.
+   * @param timesOnStartLine   the list of timing records obtained on the Start Line waypoint.
+   * @param index              the index of the track's waypoints timing data to be used to populate
+   *                           the given track timing record.
+   * @param trackRecord        the given Track Timing Record.
+   * @param isValidTrackRecord the validity of the given trackRecord.
+   * @return the validity of the given trackRecord, true if it contains timing data on anu of its
+   * waypoints and false if it doesn't
    */
-  private static void getTimingDataOnStartLine(List<TimeRecordDTO> timesOnStartLine, int index,
-      FiveWaypointsTrackTimingRecordDTO trackRecord) {
+  private static boolean getStartLineTimingData(List<TimeRecordDTO> timesOnStartLine, int index,
+      FiveWaypointsTrackTimingRecordDTO trackRecord, boolean isValidTrackRecord) {
 
     if (!timesOnStartLine.isEmpty() && index < timesOnStartLine.size()) {
       trackRecord.setChipOnStartLine(timesOnStartLine.get(index).getChip());
       trackRecord.setTimeOnStartLine(timesOnStartLine.get(index).getTime());
       trackRecord.setLapOnStartLine(timesOnStartLine.get(index).getLap());
+      return true;
     }
+
+    return isValidTrackRecord;
   }
 
   /**
    * Populates the given Track Timing Record with the data of the given index on the Waypoint A
    * Timing Records.
    *
-   * @param timesOnWaypointA the list of timing records obtained on the A waypoint.
-   * @param index            the index of the track's waypoints timing data to be used to populate
-   *                         the given track timing record.
-   * @param trackRecord      the given Track Timing Record.
+   * @param timesOnWaypointA   the list of timing records obtained on the A waypoint.
+   * @param index              the index of the track's waypoints timing data to be used to populate
+   *                           the given track timing record.
+   * @param trackRecord        the given Track Timing Record.
+   * @param isValidTrackRecord the validity of the given trackRecord.
+   * @return the validity of the given trackRecord, true if it contains timing data on anu of its
+   * waypoints and false if it doesn't
    */
-  private static void getTimingDataOnWaypointA(List<TimeRecordDTO> timesOnWaypointA, int index,
-      FiveWaypointsTrackTimingRecordDTO trackRecord) {
+  private static boolean getWaypointATimingData(List<TimeRecordDTO> timesOnWaypointA, int index,
+      FiveWaypointsTrackTimingRecordDTO trackRecord, boolean isValidTrackRecord) {
 
     if (!timesOnWaypointA.isEmpty() && index < timesOnWaypointA.size()) {
       trackRecord.setChipOnWaypointA(timesOnWaypointA.get(index).getChip());
       trackRecord.setTimeOnWaypointA(timesOnWaypointA.get(index).getTime());
       trackRecord.setLapOnWaypointA(timesOnWaypointA.get(index).getLap());
+      return true;
     }
+
+    return isValidTrackRecord;
   }
 
   /**
    * Populates the given Track Timing Record with the data of the given index on the Waypoint B
    * Timing Records.
    *
-   * @param timesOnWaypointB the list of timing records obtained on the B waypoint.
-   * @param index            the index of the track's waypoints timing data to be used to populate
-   *                         the given track timing record.
-   * @param trackRecord      the given Track Timing Record.
+   * @param timesOnWaypointB   the list of timing records obtained on the B waypoint.
+   * @param index              the index of the track's waypoints timing data to be used to populate
+   *                           the given track timing record.
+   * @param trackRecord        the given Track Timing Record.
+   * @param isValidTrackRecord the validity of the given trackRecord.
+   * @return the validity of the given trackRecord, true if it contains timing data on anu of its
+   * waypoints and false if it doesn't
    */
-  private static void getTimingDataOnWaypointB(List<TimeRecordDTO> timesOnWaypointB, int index,
-      FiveWaypointsTrackTimingRecordDTO trackRecord) {
+  private static boolean getWaypointBTimingData(List<TimeRecordDTO> timesOnWaypointB, int index,
+      FiveWaypointsTrackTimingRecordDTO trackRecord, boolean isValidTrackRecord) {
 
     if (!timesOnWaypointB.isEmpty() && index < timesOnWaypointB.size()) {
       trackRecord.setChipOnWaypointB(timesOnWaypointB.get(index).getChip());
       trackRecord.setTimeOnWaypointB(timesOnWaypointB.get(index).getTime());
       trackRecord.setLapOnWaypointB(timesOnWaypointB.get(index).getLap());
+      return true;
     }
+
+    return isValidTrackRecord;
   }
 
   /**
    * Populates the given Track Timing Record with the data of the given index on the Waypoint C
    * Timing Records.
    *
-   * @param timesOnWaypointC the list of timing records obtained on the C waypoint.
-   * @param index            the index of the track's waypoints timing data to be used to populate
-   *                         the given track timing record.
-   * @param trackRecord      the given Track Timing Record.
+   * @param timesOnWaypointC   the list of timing records obtained on the C waypoint.
+   * @param index              the index of the track's waypoints timing data to be used to populate
+   *                           the given track timing record.
+   * @param trackRecord        the given Track Timing Record.
+   * @param isValidTrackRecord the validity of the given trackRecord.
+   * @return the validity of the given trackRecord, true if it contains timing data on anu of its
+   * waypoints and false if it doesn't
    */
-  private static void getTimingDataOnWaypointC(List<TimeRecordDTO> timesOnWaypointC, int index,
-      FiveWaypointsTrackTimingRecordDTO trackRecord) {
+  private static boolean getWaypointCTimingData(List<TimeRecordDTO> timesOnWaypointC, int index,
+      FiveWaypointsTrackTimingRecordDTO trackRecord, boolean isValidTrackRecord) {
 
     if (!timesOnWaypointC.isEmpty() && index < timesOnWaypointC.size()) {
       trackRecord.setChipOnWaypointC(timesOnWaypointC.get(index).getChip());
       trackRecord.setTimeOnWaypointC(timesOnWaypointC.get(index).getTime());
       trackRecord.setLapOnWaypointC(timesOnWaypointC.get(index).getLap());
+      return true;
     }
+
+    return isValidTrackRecord;
   }
 
   /**
    * Populates the given Track Timing Record with the data of the given index on the Waypoint D
    * Timing Records.
    *
-   * @param timesOnWaypointD the list of timing records obtained on the D waypoint.
-   * @param index            the index of the track's waypoints timing data to be used to populate
-   *                         the given track timing record.
-   * @param trackRecord      the given Track Timing Record.
+   * @param timesOnWaypointD   the list of timing records obtained on the D waypoint.
+   * @param index              the index of the track's waypoints timing data to be used to populate
+   *                           the given track timing record.
+   * @param trackRecord        the given Track Timing Record.
+   * @param isValidTrackRecord the validity of the given trackRecord.
+   * @return the validity of the given trackRecord, true if it contains timing data on anu of its
+   * waypoints and false if it doesn't
    */
-  private static void getTimingDataOnWaypointD(List<TimeRecordDTO> timesOnWaypointD, int index,
-      FiveWaypointsTrackTimingRecordDTO trackRecord) {
+  private static boolean getWaypointDTimingData(List<TimeRecordDTO> timesOnWaypointD, int index,
+      FiveWaypointsTrackTimingRecordDTO trackRecord, boolean isValidTrackRecord) {
 
     if (!timesOnWaypointD.isEmpty() && index < timesOnWaypointD.size()) {
       trackRecord.setChipOnWaypointD(timesOnWaypointD.get(index).getChip());
       trackRecord.setTimeOnWaypointD(timesOnWaypointD.get(index).getTime());
       trackRecord.setLapOnWaypointD(timesOnWaypointD.get(index).getLap());
+      return true;
     }
+
+    return isValidTrackRecord;
   }
 
   /**
    * Populates the given Track Timing Record with the data of the given index on the Finish Line
    * Timing Records.
    *
-   * @param timesOnFinishLine the list of timing records obtained on the Finish Line waypoint.
-   * @param index             the index of the track's waypoints timing data to be used to populate
-   *                          the given track timing record.
-   * @param trackRecord       the given Track Timing Record.
+   * @param timesOnFinishLine  the list of timing records obtained on the Finish Line waypoint.
+   * @param index              the index of the track's waypoints timing data to be used to populate
+   *                           the given track timing record.
+   * @param trackRecord        the given Track Timing Record.
+   * @param isValidTrackRecord the validity of the given trackRecord.
+   * @return the validity of the given trackRecord, true if it contains timing data on anu of its
+   * waypoints and false if it doesn't
    */
-  private static void getTimingDataOnFinishLine(List<TimeRecordDTO> timesOnFinishLine, int index,
-      FiveWaypointsTrackTimingRecordDTO trackRecord) {
+  private static boolean getFinishLineTimingData(List<TimeRecordDTO> timesOnFinishLine, int index,
+      FiveWaypointsTrackTimingRecordDTO trackRecord, boolean isValidTrackRecord) {
 
     if (!timesOnFinishLine.isEmpty() && index < timesOnFinishLine.size()) {
       trackRecord.setChipOnFinishLine(timesOnFinishLine.get(index).getChip());
       trackRecord.setTimeOnFinishLine(timesOnFinishLine.get(index).getTime());
       trackRecord.setLapOnFinishLine(timesOnFinishLine.get(index).getLap());
+      return true;
     }
+
+    return isValidTrackRecord;
   }
 
   /**
@@ -296,7 +348,7 @@ public class TrackTimingDataMapper {
    *                            populate the given track timing record.
    * @param invalidTrackRecords the invalid Track Timing Records.
    */
-  private static void getTimingDataOnInvalidLocation(List<TimeRecordDTO> invalidTimes, int index,
+  private static void getInvalidLocationTimingData(List<TimeRecordDTO> invalidTimes, int index,
       List<InvalidTrackTimingRecordDTO> invalidTrackRecords) {
 
     if (!invalidTimes.isEmpty() && index < invalidTimes.size()) {
