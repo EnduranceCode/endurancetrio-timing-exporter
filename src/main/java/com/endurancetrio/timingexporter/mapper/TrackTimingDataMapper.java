@@ -304,7 +304,7 @@ public class TrackTimingDataMapper {
 
       invalidRecord.setChip(invalidTimes.get(index).getChip());
       invalidRecord.setTime(invalidTimes.get(index).getTime());
-      invalidRecord.setLocation(invalidTimes.get(index).getChip());
+      invalidRecord.setLocation(invalidTimes.get(index).getLocation());
       invalidRecord.setLap(invalidTimes.get(index).getLap());
 
       invalidTrackRecords.add(invalidRecord);
