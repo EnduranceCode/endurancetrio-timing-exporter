@@ -38,9 +38,8 @@ import com.endurancetrio.timingexporter.model.exception.MalformedParameterExcept
 import com.endurancetrio.timingexporter.repository.mylaps.MylapsTimesRepository;
 import com.endurancetrio.timingexporter.service.mylaps.MylapsTimesService;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -70,13 +69,13 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
   public List<TimeRecordDTO> findByChipTimeDate(String date) throws EnduranceTrioException {
 
     // Get the given date as an OffsetDateTime with the earliest possible time
-    OffsetDateTime queryStartDate;
+    LocalDateTime queryStartDate;
     try {
 
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
       LocalDate localDate = LocalDate.parse(date, formatter);
 
-      queryStartDate = OffsetDateTime.of(localDate, LocalTime.MIN, ZoneOffset.UTC);
+      queryStartDate = LocalDateTime.of(localDate, LocalTime.MIN);
     } catch (DateTimeParseException exception) {
 
       String message = exception.getMessage();

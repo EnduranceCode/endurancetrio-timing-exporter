@@ -30,6 +30,7 @@ import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoin
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -50,7 +51,7 @@ public class TimeRecordMapper {
    */
   public TimeRecordDTO map(MylapsTimes entity) {
 
-    OffsetDateTime chipTime = entity.getChipTime();
+    LocalDateTime chipTime = entity.getChipTime();
     LocalDate localDateFromChipTime =
         LocalDate.of(chipTime.getYear(), chipTime.getMonth(), chipTime.getDayOfMonth());
     OffsetDateTime earliestDateTimeOfChipTimeDate =

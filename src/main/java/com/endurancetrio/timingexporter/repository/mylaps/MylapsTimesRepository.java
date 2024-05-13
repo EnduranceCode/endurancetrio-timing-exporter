@@ -26,7 +26,7 @@
 package com.endurancetrio.timingexporter.repository.mylaps;
 
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -41,5 +41,5 @@ public interface MylapsTimesRepository extends JpaRepository<MylapsTimes, Long> 
    * @param end   the given end OffsetDateTime
    * @return the list of MYLAPS Time records of the given date
    */
-  List<MylapsTimes> findByChipTimeBetween(OffsetDateTime start, OffsetDateTime end);
+  List<MylapsTimes> findByChipTimeBetween(LocalDateTime start, LocalDateTime end);
 }

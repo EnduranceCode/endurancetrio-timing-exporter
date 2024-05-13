@@ -39,10 +39,10 @@ import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoin
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.repository.mylaps.MylapsTimesRepository;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,9 +70,9 @@ class MylapsTimesServiceImpTest {
 
   @BeforeEach
   void setUp() {
-    OffsetDateTime testChipTime1 = OffsetDateTime.parse("1984-08-15T15:07:00+00:00");
-    OffsetDateTime testChipTime2 = OffsetDateTime.parse("1984-08-15T15:07:06+00:00");
-    OffsetDateTime testChipTime3 = OffsetDateTime.parse("1984-08-15T15:07:12+00:00");
+    LocalDateTime testChipTime1 = LocalDateTime.parse("1984-08-15T15:07:00");
+    LocalDateTime testChipTime2 = LocalDateTime.parse("1984-08-15T15:07:06");
+    LocalDateTime testChipTime3 = LocalDateTime.parse("1984-08-15T15:07:12");
 
     testMylapsTimes1 =
         MylapsTimes.builder().id(1L).chip("AAAAAAA").chipTime(testChipTime1).milliSecs(54420150)
@@ -93,21 +93,25 @@ class MylapsTimesServiceImpTest {
 
   @Test
   void findByChipTimeDate() throws EnduranceTrioException {
-    OffsetDateTime testStart = OffsetDateTime.parse("1984-08-15T00:00:00+00:00");
-    OffsetDateTime testEnd = testStart.plusDays(1L);
+    LocalDateTime testStart = LocalDateTime.parse("1984-08-15T00:00:00");
+    LocalDateTime testEnd = testStart.plusDays(1L);
 
-    OffsetDateTime testTime1 = OffsetDateTime.parse("1984-08-15T15:07:00.15+00:00");
-    OffsetDateTime testTime2 = OffsetDateTime.parse("1984-08-15T15:07:06.20+00:00");
-    OffsetDateTime testTime3 = OffsetDateTime.parse("1984-08-15T15:07:12.25+00:00");
+    LocalDateTime testTime1 = LocalDateTime.parse("1984-08-15T15:07:00.15");
+    LocalDateTime testTime2 = LocalDateTime.parse("1984-08-15T15:07:06.20");
+    LocalDateTime testTime3 = LocalDateTime.parse("1984-08-15T15:07:12.25");
 
-    TimeRecordDTO recordDTO1 = TimeRecordDTO.builder().chip("AAAAAAA").time(testTime1.toInstant())
-                                            .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
-    TimeRecordDTO recordDTO2 = TimeRecordDTO.builder().chip("AAAAAAB").time(testTime2.toInstant())
-                                            .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
-    TimeRecordDTO recordDTO3 = TimeRecordDTO.builder().chip("AAAAAAC").time(testTime3.toInstant())
-                                            .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
-    TimeRecordDTO recordDTO9 = TimeRecordDTO.builder().chip("AAAAAAC").time(testTime3.toInstant())
-                                            .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
+    TimeRecordDTO recordDTO1 =
+        TimeRecordDTO.builder().chip("AAAAAAA").time(testTime1.toInstant(ZoneOffset.UTC))
+                     .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
+    TimeRecordDTO recordDTO2 =
+        TimeRecordDTO.builder().chip("AAAAAAB").time(testTime2.toInstant(ZoneOffset.UTC))
+                     .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
+    TimeRecordDTO recordDTO3 =
+        TimeRecordDTO.builder().chip("AAAAAAC").time(testTime3.toInstant(ZoneOffset.UTC))
+                     .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
+    TimeRecordDTO recordDTO9 =
+        TimeRecordDTO.builder().chip("AAAAAAC").time(testTime3.toInstant(ZoneOffset.UTC))
+                     .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
 
     when(mylapsTimesRepository.findByChipTimeBetween(testStart, testEnd)).thenReturn(testData);
     when(timeRecordMapper.map(testMylapsTimes1)).thenReturn(recordDTO1);

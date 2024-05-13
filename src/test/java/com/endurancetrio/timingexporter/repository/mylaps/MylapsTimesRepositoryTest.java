@@ -30,9 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -58,8 +57,8 @@ class MylapsTimesRepositoryTest {
   void findByChipTimeBetween() {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate localDate = LocalDate.parse("1984-08-15", formatter);
-    OffsetDateTime testStartDate = OffsetDateTime.of(localDate, LocalTime.MIN, ZoneOffset.UTC);
-    OffsetDateTime testEndDate = testStartDate.plusDays(1L);
+    LocalDateTime testStartDate = LocalDateTime.of(localDate, LocalTime.MIN);
+    LocalDateTime testEndDate = testStartDate.plusDays(1L);
 
     List<MylapsTimes> mylapsTimes =
         mylapsTimesRepository.findByChipTimeBetween(testStartDate, testEndDate);
