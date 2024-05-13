@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Ricardo do Canto
+ * Copyright (c) 2024 Ricardo do Canto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,32 @@
  *
  */
 
-package com.endurancetrio.timingexporter.model.exception;
+package com.endurancetrio.timingexporter.model.constants;
 
-/**
- *
- */
-public enum EnduranceTrioError {
-  INVALID_TIMEZONE("The given timezone parameter is invalid or not supported"),
-  MALFORMED_PARAMETER("One of the given parameters is malformed, please check the documentation");
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-  private final String message;
+import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
+import org.junit.jupiter.api.Test;
 
-  EnduranceTrioError(String message) {
-    this.message = message;
+class PathTimezoneTest {
+
+  @Test
+  void testValidLisbonTimezone() throws EnduranceTrioException {
+    PathTimezone result = PathTimezone.fromString("lisbon");
+
+    assertEquals(PathTimezone.LISBON, result);
   }
 
-  public String getMessage() {
-    return message;
+  @Test
+  void testValidAzoresTimezone() throws EnduranceTrioException {
+    PathTimezone result = PathTimezone.fromString("azores");
+
+    assertEquals(PathTimezone.AZORES, result);
+  }
+
+  @Test
+  void testInvalidTimezone() throws EnduranceTrioException {
+    assertThrows(EnduranceTrioException.class, () -> PathTimezone.fromString("utc"));
   }
 }
