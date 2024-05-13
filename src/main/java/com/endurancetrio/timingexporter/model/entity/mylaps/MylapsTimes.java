@@ -25,7 +25,7 @@
 
 package com.endurancetrio.timingexporter.model.entity.mylaps;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -70,7 +70,7 @@ public class MylapsTimes {
    * The date and time registered by the MYLAPS decoders.
    */
   @Column(name = "ChipTime", nullable = false)
-  private OffsetDateTime chipTime;
+  private LocalDateTime chipTime;
 
   /**
    * The ChipType information sent by MYLAPS Timing & Scoring Software.
@@ -196,11 +196,11 @@ public class MylapsTimes {
     this.chip = chip;
   }
 
-  public OffsetDateTime getChipTime() {
+  public LocalDateTime getChipTime() {
     return chipTime;
   }
 
-  public void setChipTime(OffsetDateTime chipTime) {
+  public void setChipTime(LocalDateTime chipTime) {
     this.chipTime = chipTime;
   }
 
@@ -308,7 +308,7 @@ public class MylapsTimes {
 
     private Long id;
     private String chip;
-    private OffsetDateTime chipTime;
+    private LocalDateTime chipTime;
     private String chipType;
     private Integer pc;
     private Integer reader;
@@ -332,7 +332,7 @@ public class MylapsTimes {
       return this;
     }
 
-    public Builder chipTime(OffsetDateTime chipTime) {
+    public Builder chipTime(LocalDateTime chipTime) {
       this.chipTime = chipTime;
       return this;
     }
