@@ -30,6 +30,7 @@ import com.endurancetrio.timingexporter.mapper.TrackTimingDataMapper;
 import com.endurancetrio.timingexporter.model.dto.common.ErrorDTO;
 import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioError;
@@ -37,9 +38,11 @@ import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.exception.MalformedParameterException;
 import com.endurancetrio.timingexporter.repository.mylaps.MylapsTimesRepository;
 import com.endurancetrio.timingexporter.service.mylaps.MylapsTimesService;
+import com.endurancetrio.timingexporter.utils.DateTimeUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -90,6 +93,23 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
     return times.stream().map(timeRecordMapper::map).distinct()
                 .sorted(Comparator.comparing(TimeRecordDTO::getTime))
                 .collect(Collectors.toCollection(ArrayList::new));
+  }
+
+  @Override
+  public List<TimingRecordDTO> findByChipTimeDate(String tzIdentifier, String date)
+      throws EnduranceTrioException {
+
+    // Get the given date as an LocalDateTime with the earliest possible time
+    ZoneId zoneId = DateTimeUtils.getZoneId(tzIdentifier);
+    LocalDate localDate = DateTimeUtils.getLocalDate(date);
+    LocalDateTime queryStartDate = LocalDateTime.of(localDate, LocalTime.MIN);
+
+    final List<MylapsTimes> times =
+        mylapsTimesRepository.findByChipTimeBetween(queryStartDate, queryStartDate.plusDays(1L));
+
+    return times.stream().map(entity -> timeRecordMapper.map(zoneId, entity)).distinct()
+                .sorted(Comparator.comparing(TimingRecordDTO::getTime))
+                .collect(Collectors.toList());
   }
 
   @Override
