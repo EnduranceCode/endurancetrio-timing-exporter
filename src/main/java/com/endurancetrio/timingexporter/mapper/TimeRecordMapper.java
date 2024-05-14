@@ -26,6 +26,7 @@
 package com.endurancetrio.timingexporter.mapper;
 
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
 import java.time.Instant;
@@ -33,7 +34,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,12 +47,12 @@ import org.springframework.stereotype.Component;
 public class TimeRecordMapper {
 
   /**
-   * Converts the given MylapsTimes object into the EnduranceTrio Timing Exporter time record object
-   * (TimeRecordDTO).
-   *
    * @param entity the given MylapsTimes time record
    * @return the converted to custom time record object
+   * @deprecated Converts the given MylapsTimes object into the EnduranceTrio Timing Exporter time
+   * record object (TimeRecordDTO).
    */
+  @Deprecated
   public TimeRecordDTO map(MylapsTimes entity) {
 
     LocalDateTime chipTime = entity.getChipTime();
@@ -75,6 +79,28 @@ public class TimeRecordMapper {
       return TimeRecordDTO.builder().chip(entity.getChip()).time(instant)
                           .location(entity.getLocation()).lap(entity.getLapRaw())
                           .build();
+    }
+  }
+
+  public TimingRecordDTO map(ZoneId zoneId, MylapsTimes entity) {
+    LocalDateTime chipTime = entity.getChipTime();
+    LocalDate chipDate =
+        LocalDate.of(chipTime.getYear(), chipTime.getMonth(), chipTime.getDayOfMonth());
+    ZonedDateTime zeroChipZoneDateTime = LocalDateTime.of(chipDate, LocalTime.MIN).atZone(zoneId);
+
+    ZonedDateTime chipZoneDateTime =
+        zeroChipZoneDateTime.plus(entity.getMilliSecs(), ChronoUnit.MILLIS);
+
+    try {
+      // When the registered location is valid, the waypoint is included in the TimingRecordDTO
+      return TimingRecordDTO.builder().waypoint(getWaypoint(entity.getLocation()))
+                            .chip(entity.getChip()).time(chipZoneDateTime.toInstant())
+                            .lap(entity.getLapRaw()).build();
+    } catch (IllegalArgumentException exception) {
+      // When the registered location is NOT valid, the waypoint it is NOT included
+      // in the TimingRecordDTO and the location is added
+      return TimingRecordDTO.builder().location(entity.getLocation()).chip(entity.getChip())
+                            .time(chipZoneDateTime.toInstant()).lap(entity.getLapRaw()).build();
     }
   }
 

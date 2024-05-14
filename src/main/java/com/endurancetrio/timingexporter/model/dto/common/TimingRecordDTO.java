@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Ricardo do Canto
+ * Copyright (c) 2024 Ricardo do Canto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,31 +34,46 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * @deprecated Timing data on a waypoint.
+ * Timing data on a waypoint or location.
  */
-@Deprecated
-public class TimeRecordDTO implements Serializable {
+public class TimingRecordDTO implements Serializable {
 
-  private static final long serialVersionUID = 95819105492811685L;
+  private static final long serialVersionUID = 8574495110559383106L;
 
-  private String chip;
-  private Instant time;
   @JsonInclude(Include.NON_NULL)
   private EnduranceTrioWaypoint waypoint;
   @JsonInclude(Include.NON_NULL)
   private String location;
+  private String chip;
+  private Instant time;
   private Integer lap;
 
-  public TimeRecordDTO() {
+  public TimingRecordDTO() {
     super();
   }
 
-  public TimeRecordDTO(Builder builder) {
-    this.chip = builder.chip;
-    this.time = builder.time;
+  public TimingRecordDTO(Builder builder) {
     this.waypoint = builder.waypoint;
     this.location = builder.location;
+    this.chip = builder.chip;
+    this.time = builder.time;
     this.lap = builder.lap;
+  }
+
+  public EnduranceTrioWaypoint getWaypoint() {
+    return waypoint;
+  }
+
+  public void setWaypoint(EnduranceTrioWaypoint waypoint) {
+    this.waypoint = waypoint;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
   }
 
   public String getChip() {
@@ -77,23 +92,6 @@ public class TimeRecordDTO implements Serializable {
     this.time = time;
   }
 
-  public EnduranceTrioWaypoint getWaypoint() {
-    return waypoint;
-  }
-
-  public TimeRecordDTO setWaypoint(EnduranceTrioWaypoint waypoint) {
-    this.waypoint = waypoint;
-    return this;
-  }
-
-  public String getLocation() {
-    return location;
-  }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
   public Integer getLap() {
     return lap;
   }
@@ -108,33 +106,44 @@ public class TimeRecordDTO implements Serializable {
       return true;
     }
 
-    if (!(o instanceof TimeRecordDTO)) {
+    if (!(o instanceof TimingRecordDTO)) {
       return false;
     }
 
-    TimeRecordDTO that = (TimeRecordDTO) o;
+    TimingRecordDTO that = (TimingRecordDTO) o;
 
-    return new EqualsBuilder().append(chip, that.chip).append(time, that.time)
-                              .append(waypoint, that.waypoint).append(lap, that.lap).isEquals();
+    return new EqualsBuilder().append(waypoint, that.waypoint).append(location, that.location)
+                              .append(chip, that.chip).append(time, that.time).append(lap, that.lap)
+                              .isEquals();
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(chip).append(time).append(waypoint).append(lap)
-                                      .toHashCode();
+    return new HashCodeBuilder(17, 37).append(waypoint).append(location).append(chip).append(time)
+                                      .append(lap).toHashCode();
   }
 
-  public static Builder builder() {
-    return new Builder();
+  public static TimingRecordDTO.Builder builder() {
+    return new TimingRecordDTO.Builder();
   }
 
   public static class Builder {
 
-    private String chip;
-    private Instant time;
     private EnduranceTrioWaypoint waypoint;
     private String location;
+    private String chip;
+    private Instant time;
     private Integer lap;
+
+    public Builder waypoint(EnduranceTrioWaypoint waypoint) {
+      this.waypoint = waypoint;
+      return this;
+    }
+
+    public Builder location(String label) {
+      this.location = label;
+      return this;
+    }
 
     public Builder chip(String chip) {
       this.chip = chip;
@@ -146,23 +155,13 @@ public class TimeRecordDTO implements Serializable {
       return this;
     }
 
-    public Builder waypoint(EnduranceTrioWaypoint waypoint) {
-      this.waypoint = waypoint;
-      return this;
-    }
-
-    public Builder location(String location) {
-      this.location = location;
-      return this;
-    }
-
     public Builder lap(Integer lap) {
       this.lap = lap;
       return this;
     }
 
-    public TimeRecordDTO build() {
-      return new TimeRecordDTO(this);
+    public TimingRecordDTO build() {
+      return new TimingRecordDTO(this);
     }
   }
 }
