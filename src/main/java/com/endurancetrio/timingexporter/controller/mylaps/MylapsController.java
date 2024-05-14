@@ -27,6 +27,7 @@ package com.endurancetrio.timingexporter.controller.mylaps;
 
 import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
@@ -35,15 +36,30 @@ import java.util.List;
 public interface MylapsController {
 
   /**
-   * Find the MYLAPS times records for the given day and returns the retrieved records converted
-   * into the system's time record type.
-   *
    * @param date the given date
    * @return the  MYLAPS times records for the given day converted into the system's time record
    * type
    * @throws EnduranceTrioException the custom exception
+   * @deprecated Find the MYLAPS times records for the given day and returns the retrieved records
+   * converted into the system's time record type.
    */
+  @Deprecated
   EnduranceTrioResponse<List<TimeRecordDTO>> findTimeRecordsByDate(String date)
+      throws EnduranceTrioException;
+
+  /**
+   * Finds the MYLAPS times records for the given day that were recorded with the given timezone.
+   * <p/>
+   * Find the MYLAPS times records for the given day, recorded with the given timezone, and returns
+   * the retrieved records converted into the system's time record type.
+   *
+   * @param timezone the given timezone label used with the records of the given date
+   * @param date     the given date
+   * @return the  MYLAPS times records for the given day converted into the system's time record
+   * type
+   * @throws EnduranceTrioException the custom exception
+   */
+  EnduranceTrioResponse<List<TimingRecordDTO>> findTimeRecordsByDate(String timezone, String date)
       throws EnduranceTrioException;
 
   /**
