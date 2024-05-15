@@ -25,10 +25,11 @@
 
 package com.endurancetrio.timingexporter.service.mylaps.impl;
 
-import com.endurancetrio.timingexporter.mapper.TimeRecordMapper;
+import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.mapper.TrackTimingDataMapper;
 import com.endurancetrio.timingexporter.model.dto.common.ErrorDTO;
 import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.RaceTimingDataDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
@@ -56,15 +57,15 @@ import org.springframework.stereotype.Service;
 public class MylapsTimesServiceImp implements MylapsTimesService {
 
   private final MylapsTimesRepository mylapsTimesRepository;
-  private final TimeRecordMapper timeRecordMapper;
+  private final TimingRecordMapper timingRecordMapper;
   private final TrackTimingDataMapper trackTimingDataMapper;
 
   @Autowired
-  public MylapsTimesServiceImp(TimeRecordMapper timeRecordMapper,
+  public MylapsTimesServiceImp(TimingRecordMapper timingRecordMapper,
       TrackTimingDataMapper trackTimingDataMapper, MylapsTimesRepository mylapsTimesRepository) {
 
     this.mylapsTimesRepository = mylapsTimesRepository;
-    this.timeRecordMapper = timeRecordMapper;
+    this.timingRecordMapper = timingRecordMapper;
     this.trackTimingDataMapper = trackTimingDataMapper;
   }
 
@@ -90,7 +91,7 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
     final List<MylapsTimes> times =
         mylapsTimesRepository.findByChipTimeBetween(queryStartDate, queryStartDate.plusDays(1L));
 
-    return times.stream().map(timeRecordMapper::map).distinct()
+    return times.stream().map(timingRecordMapper::map).distinct()
                 .sorted(Comparator.comparing(TimeRecordDTO::getTime))
                 .collect(Collectors.toCollection(ArrayList::new));
   }
@@ -107,7 +108,7 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
     final List<MylapsTimes> times =
         mylapsTimesRepository.findByChipTimeBetween(queryStartDate, queryStartDate.plusDays(1L));
 
-    return times.stream().map(entity -> timeRecordMapper.map(zoneId, entity)).distinct()
+    return times.stream().map(entity -> timingRecordMapper.map(zoneId, entity)).distinct()
                 .sorted(Comparator.comparing(TimingRecordDTO::getTime))
                 .collect(Collectors.toList());
   }
@@ -119,5 +120,14 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
     List<TimeRecordDTO> timeRecords = findByChipTimeDate(date);
 
     return trackTimingDataMapper.map(timeRecords);
+  }
+
+  @Override
+  public RaceTimingDataDTO findTrackTimingData(String tzIdentifier, String date)
+      throws EnduranceTrioException {
+
+    List<TimingRecordDTO> timingRecords = findByChipTimeDate(tzIdentifier, date);
+
+    return trackTimingDataMapper.convert(timingRecords);
   }
 }

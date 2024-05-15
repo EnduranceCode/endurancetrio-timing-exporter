@@ -46,10 +46,10 @@ import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-class TimeRecordMapperTest {
+class TimingRecordMapperTest {
 
   @InjectMocks
-  TimeRecordMapper timeRecordMapper;
+  TimingRecordMapper timingRecordMapper;
 
   MylapsTimes mylapsTestEntity;
   TimeRecordDTO expectedDto;
@@ -75,7 +75,7 @@ class TimeRecordMapperTest {
   @Test
   void entityToDtoWithValidLocation() {
 
-    TimeRecordDTO dto = timeRecordMapper.map(mylapsTestEntity);
+    TimeRecordDTO dto = timingRecordMapper.map(mylapsTestEntity);
 
     assertEquals(expectedDto.getChip(), dto.getChip());
     assertEquals(expectedDto.getTime(), dto.getTime());
@@ -87,7 +87,7 @@ class TimeRecordMapperTest {
   void entityToDtoWithInvalidLocation() {
 
     mylapsTestEntity.setLocation("UNKNOWN");
-    TimeRecordDTO dto = timeRecordMapper.map(mylapsTestEntity);
+    TimeRecordDTO dto = timingRecordMapper.map(mylapsTestEntity);
 
     assertEquals(expectedDto.getChip(), dto.getChip());
     assertEquals(expectedDto.getTime(), dto.getTime());
@@ -113,7 +113,7 @@ class TimeRecordMapperTest {
                        .time(testInstant)
                        .lap(1).build();
 
-    TimingRecordDTO dto = timeRecordMapper.map(zoneId, entity);
+    TimingRecordDTO dto = timingRecordMapper.map(zoneId, entity);
 
     assertEquals(expected.getChip(), dto.getChip());
     assertEquals(expected.getTime(), dto.getTime());
@@ -139,7 +139,7 @@ class TimeRecordMapperTest {
                        .time(testInstant)
                        .lap(1).build();
 
-    TimingRecordDTO dto = timeRecordMapper.map(zoneId, entity);
+    TimingRecordDTO dto = timingRecordMapper.map(zoneId, entity);
 
     assertEquals(expected.getChip(), dto.getChip());
     assertEquals(expected.getTime(), dto.getTime());

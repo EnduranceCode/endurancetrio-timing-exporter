@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
  * Maps an OEM time record object into an EnduranceTrio Timing Exporter time record.
  */
 @Component
-public class TimeRecordMapper {
+public class TimingRecordMapper {
 
   /**
    * @param entity the given MylapsTimes time record

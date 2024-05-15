@@ -36,10 +36,33 @@ public enum EnduranceTrioWaypoint {
   CI,
   // Start Line
   SL,
+  // Intermediate Waypoints
   WA,
   WB,
   WC,
   WD,
+  WE,
+  WF,
+  WG,
+  WH,
+  WI,
+  WJ,
+  WK,
+  WL,
+  WM,
+  WN,
+  WO,
+  WP,
+  WQ,
+  WR,
+  WS,
+  WT,
+  WU,
+  WV,
+  WW,
+  WX,
+  WY,
+  WZ,
   // Finish Line
   FL;
 }
