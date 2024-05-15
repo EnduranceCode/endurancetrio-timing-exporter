@@ -26,6 +26,7 @@
 package com.endurancetrio.timingexporter.service.mylaps;
 
 import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.RaceTimingDataDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
@@ -71,4 +72,15 @@ public interface MylapsTimesService {
    */
   TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> findFiveWaypointsTrackTimingRecord(
       String date) throws EnduranceTrioException;
+
+  /**
+   * Finds the race timing data for the given day that were recorded with the given timezone.
+   *
+   * @param tzIdentifier the given timezone identifier used with the records of the given date
+   * @param date         the given date
+   * @return race timing data for the given day that were recorded with the given timezone
+   * @throws EnduranceTrioException the custom exception
+   */
+  RaceTimingDataDTO findTrackTimingData(String tzIdentifier, String date)
+      throws EnduranceTrioException;
 }

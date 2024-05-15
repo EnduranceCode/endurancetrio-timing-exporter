@@ -33,7 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.endurancetrio.timingexporter.mapper.TimeRecordMapper;
+import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
@@ -64,7 +64,7 @@ class MylapsTimesServiceImpTest {
   MylapsTimesRepository mylapsTimesRepository;
 
   @Mock
-  TimeRecordMapper timeRecordMapper;
+  TimingRecordMapper timingRecordMapper;
 
   final List<MylapsTimes> testData = new ArrayList<>();
   MylapsTimes testMylapsTimes1;
@@ -118,15 +118,15 @@ class MylapsTimesServiceImpTest {
                      .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
 
     when(mylapsTimesRepository.findByChipTimeBetween(testStart, testEnd)).thenReturn(testData);
-    when(timeRecordMapper.map(testMylapsTimes1)).thenReturn(recordDTO1);
-    when(timeRecordMapper.map(testMylapsTimes2)).thenReturn(recordDTO2);
-    when(timeRecordMapper.map(testMylapsTimes3)).thenReturn(recordDTO3);
-    when(timeRecordMapper.map(testMylapsTimes9)).thenReturn(recordDTO9);
+    when(timingRecordMapper.map(testMylapsTimes1)).thenReturn(recordDTO1);
+    when(timingRecordMapper.map(testMylapsTimes2)).thenReturn(recordDTO2);
+    when(timingRecordMapper.map(testMylapsTimes3)).thenReturn(recordDTO3);
+    when(timingRecordMapper.map(testMylapsTimes9)).thenReturn(recordDTO9);
 
     List<TimeRecordDTO> results = mylapsTimesService.findByChipTimeDate("1984-08-15");
 
     verify(mylapsTimesRepository, times(1)).findByChipTimeBetween(any(), any());
-    verify(timeRecordMapper, times(4)).map(any());
+    verify(timingRecordMapper, times(4)).map(any());
     assertNotNull(results);
     assertEquals(3, results.size());
     assertEquals("AAAAAAA", results.get(0).getChip());
@@ -162,16 +162,16 @@ class MylapsTimesServiceImpTest {
                        .time(testTime3.atZone(zoneId).toInstant()).lap(1).build();
 
     when(mylapsTimesRepository.findByChipTimeBetween(testStart, testEnd)).thenReturn(testData);
-    when(timeRecordMapper.map(zoneId, testMylapsTimes1)).thenReturn(recordDTO1);
-    when(timeRecordMapper.map(zoneId, testMylapsTimes2)).thenReturn(recordDTO2);
-    when(timeRecordMapper.map(zoneId, testMylapsTimes3)).thenReturn(recordDTO3);
-    when(timeRecordMapper.map(zoneId, testMylapsTimes9)).thenReturn(recordDTO9);
+    when(timingRecordMapper.map(zoneId, testMylapsTimes1)).thenReturn(recordDTO1);
+    when(timingRecordMapper.map(zoneId, testMylapsTimes2)).thenReturn(recordDTO2);
+    when(timingRecordMapper.map(zoneId, testMylapsTimes3)).thenReturn(recordDTO3);
+    when(timingRecordMapper.map(zoneId, testMylapsTimes9)).thenReturn(recordDTO9);
 
     List<TimingRecordDTO> results =
         mylapsTimesService.findByChipTimeDate(tzIdentifier, date);
 
     verify(mylapsTimesRepository, times(1)).findByChipTimeBetween(any(), any());
-    verify(timeRecordMapper, times(4)).map(any(), any());
+    verify(timingRecordMapper, times(4)).map(any(), any());
     assertNotNull(results);
     assertEquals(3, results.size());
     assertEquals("AAAAAAA", results.get(0).getChip());
