@@ -29,6 +29,7 @@ import com.endurancetrio.timingexporter.controller.mylaps.MylapsController;
 import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
 import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
+import com.endurancetrio.timingexporter.model.dto.common.RaceTimingDataDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
@@ -88,10 +89,25 @@ public class MylapsControllerImpl implements MylapsController {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "/five-waypoints/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
   public EnduranceTrioResponse<TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO>> findFiveWaypointsRaceRecord(
-      @PathVariable String date) throws EnduranceTrioException {
+      @PathVariable String date
+  ) throws EnduranceTrioException {
 
     TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> data =
         mylapsTimesService.findFiveWaypointsTrackTimingRecord(date);
+
+    return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
+  }
+
+  @Override
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping(value = "{timezone}/track-timing/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public EnduranceTrioResponse<RaceTimingDataDTO> findTrackTimingData(@PathVariable String timezone,
+      @PathVariable String date
+  ) throws EnduranceTrioException {
+
+    String tzIdentifier = PathTimezone.fromString(timezone).getTimezone();
+
+    RaceTimingDataDTO data = mylapsTimesService.findTrackTimingData(tzIdentifier, date);
 
     return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
   }
