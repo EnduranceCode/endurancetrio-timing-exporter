@@ -43,7 +43,7 @@ import org.springframework.stereotype.Component;
 public class EventTimingMapper {
 
   /**
-   * Maps a list of TimingRecordDTO into a EventTimingDTO object.
+   * Converts a list of TimingRecordDTO into a EventTimingDTO object.
    *
    * @param timingRecords the given timing records list
    * @return a EventTimingDTO object

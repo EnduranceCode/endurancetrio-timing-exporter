@@ -73,7 +73,7 @@ public class MylapsControllerImpl implements MylapsController {
 
   @Override
   @ResponseStatus(HttpStatus.OK)
-  @GetMapping(value = "{timezone}/track-timing/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "{timezone}/event-timing/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
   public EnduranceTrioResponse<EventTimingDTO> findEventTimingData(@PathVariable String timezone,
       @PathVariable String date
   ) throws EnduranceTrioException {
