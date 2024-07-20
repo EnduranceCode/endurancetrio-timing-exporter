@@ -37,11 +37,19 @@ import java.time.temporal.ChronoUnit;
 import org.springframework.stereotype.Component;
 
 /**
- * Maps an OEM time record object into an EnduranceTrio Timing Exporter time record.
+ * Maps an OEM time record object into an EnduranceTrio Timing Exporter time record
+ * (TimingRecordDTO).
  */
 @Component
 public class TimingRecordMapper {
 
+  /**
+   * Maps a MylapsTimes entity into a EnduranceTrio Timing Exporter time record (TimingRecordDTO).
+   *
+   * @param zoneId the given ZoneId
+   * @param entity the given MylapsTimes entity
+   * @return the converted EnduranceTrio Timing Exporter time record (TimingRecordDTO)
+   */
   public TimingRecordDTO map(ZoneId zoneId, MylapsTimes entity) {
     LocalDateTime chipTime = entity.getChipTime();
     LocalDate chipDate =

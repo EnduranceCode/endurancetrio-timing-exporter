@@ -26,8 +26,8 @@
 package com.endurancetrio.timingexporter.service.mylaps.impl;
 
 import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
-import com.endurancetrio.timingexporter.mapper.TrackTimingDataMapper;
-import com.endurancetrio.timingexporter.model.dto.common.RaceTimingDataDTO;
+import com.endurancetrio.timingexporter.mapper.EventTimingMapper;
+import com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
@@ -49,15 +49,15 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
 
   private final MylapsTimesRepository mylapsTimesRepository;
   private final TimingRecordMapper timingRecordMapper;
-  private final TrackTimingDataMapper trackTimingDataMapper;
+  private final EventTimingMapper eventTimingMapper;
 
   @Autowired
   public MylapsTimesServiceImp(TimingRecordMapper timingRecordMapper,
-      TrackTimingDataMapper trackTimingDataMapper, MylapsTimesRepository mylapsTimesRepository) {
+      EventTimingMapper eventTimingMapper, MylapsTimesRepository mylapsTimesRepository) {
 
     this.mylapsTimesRepository = mylapsTimesRepository;
     this.timingRecordMapper = timingRecordMapper;
-    this.trackTimingDataMapper = trackTimingDataMapper;
+    this.eventTimingMapper = eventTimingMapper;
   }
 
   @Override
@@ -78,11 +78,11 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
   }
 
   @Override
-  public RaceTimingDataDTO findTrackTimingData(String tzIdentifier, String date)
+  public EventTimingDTO findEventTimingData(String tzIdentifier, String date)
       throws EnduranceTrioException {
 
     List<TimingRecordDTO> timingRecords = findByChipTimeDate(tzIdentifier, date);
 
-    return trackTimingDataMapper.convert(timingRecords);
+    return eventTimingMapper.convert(timingRecords);
   }
 }
