@@ -34,7 +34,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Timing data on a waypoint or location.
+ * TimingRecordDTO is a Data Transfer Object (DTO) that encapsulates the timing data of an athlete
+ * at a specific waypoint or location during an event, such as a running race or a triathlon. It
+ * contains the location identifier, athlete's unique identifier, and the recorded time.
+ *
+ * @see EventTimingDTO
  */
 public class TimingRecordDTO implements Serializable {
 

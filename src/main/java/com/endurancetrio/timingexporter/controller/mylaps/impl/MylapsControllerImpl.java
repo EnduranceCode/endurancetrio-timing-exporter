@@ -28,7 +28,7 @@ package com.endurancetrio.timingexporter.controller.mylaps.impl;
 import com.endurancetrio.timingexporter.controller.mylaps.MylapsController;
 import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
-import com.endurancetrio.timingexporter.model.dto.common.RaceTimingDataDTO;
+import com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
@@ -74,13 +74,13 @@ public class MylapsControllerImpl implements MylapsController {
   @Override
   @ResponseStatus(HttpStatus.OK)
   @GetMapping(value = "{timezone}/track-timing/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public EnduranceTrioResponse<RaceTimingDataDTO> findTrackTimingData(@PathVariable String timezone,
+  public EnduranceTrioResponse<EventTimingDTO> findEventTimingData(@PathVariable String timezone,
       @PathVariable String date
   ) throws EnduranceTrioException {
 
     String tzIdentifier = PathTimezone.fromString(timezone).getTimezone();
 
-    RaceTimingDataDTO data = mylapsTimesService.findTrackTimingData(tzIdentifier, date);
+    EventTimingDTO data = mylapsTimesService.findEventTimingData(tzIdentifier, date);
 
     return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
   }

@@ -30,9 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * EventTimingDTO is a Data Transfer Object (DTO) that encapsulates the timing data for an event,
+ * such as a running race or a triathlon. It contains list, per location, of TimingRecordDTO
+ * objects, which represent the recorded timing data for athletes at the corresponding location.
  *
+ * @see TimingRecordDTO
  */
-public class RaceTimingDataDTO implements Serializable {
+public class EventTimingDTO implements Serializable {
 
   private static final long serialVersionUID = 9013922786591954313L;
 
@@ -42,11 +46,11 @@ public class RaceTimingDataDTO implements Serializable {
   private List<TimingRecordDTO> finishLine = new ArrayList<>();
   private List<TimingRecordDTO> invalid = new ArrayList<>();
 
-  public RaceTimingDataDTO() {
+  public EventTimingDTO() {
     super();
   }
 
-  public RaceTimingDataDTO(Builder builder) {
+  public EventTimingDTO(Builder builder) {
     this.checkIn = builder.checkIn;
     this.startLine = builder.startLine;
     this.intermediateWaypoints = builder.intermediateWaypoints;
@@ -132,8 +136,8 @@ public class RaceTimingDataDTO implements Serializable {
       return this;
     }
 
-    public RaceTimingDataDTO build() {
-      return new RaceTimingDataDTO(this);
+    public EventTimingDTO build() {
+      return new EventTimingDTO(this);
     }
   }
 }

@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.endurancetrio.timingexporter.model.dto.common.RaceTimingDataDTO;
+import com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
 import java.time.OffsetDateTime;
@@ -41,10 +41,10 @@ import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-class TrackTimingDataMapperTest {
+class EventTimingMapperTest {
 
   @InjectMocks
-  TrackTimingDataMapper trackTimingDataMapper;
+  EventTimingMapper eventTimingMapper;
 
   OffsetDateTime testTime1;
   OffsetDateTime testTime2;
@@ -88,7 +88,7 @@ class TrackTimingDataMapperTest {
         List.of(timingRecordDTO01, timingRecordDTO02, timingRecordDTO03, timingRecordDTO04,
                 timingRecordDTO05, timingRecordDTO09);
 
-    RaceTimingDataDTO result = trackTimingDataMapper.convert(timingRecords);
+    EventTimingDTO result = eventTimingMapper.convert(timingRecords);
 
     assertNotNull(result);
     assertEquals(0, result.getCheckIn().size());
@@ -117,7 +117,7 @@ class TrackTimingDataMapperTest {
         List.of(timingRecordDTO01, timingRecordDTO01, timingRecordDTO01, timingRecordDTO01,
                 timingRecordDTO01, timingRecordDTO01);
 
-    RaceTimingDataDTO result = trackTimingDataMapper.convert(timingRecords);
+    EventTimingDTO result = eventTimingMapper.convert(timingRecords);
 
     assertNotNull(result);
     assertEquals(0, result.getCheckIn().size());
