@@ -27,16 +27,10 @@ package com.endurancetrio.timingexporter.service.mylaps.impl;
 
 import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.mapper.TrackTimingDataMapper;
-import com.endurancetrio.timingexporter.model.dto.common.ErrorDTO;
-import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.RaceTimingDataDTO;
-import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
-import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
-import com.endurancetrio.timingexporter.model.exception.EnduranceTrioError;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
-import com.endurancetrio.timingexporter.model.exception.MalformedParameterException;
 import com.endurancetrio.timingexporter.repository.mylaps.MylapsTimesRepository;
 import com.endurancetrio.timingexporter.service.mylaps.MylapsTimesService;
 import com.endurancetrio.timingexporter.utils.DateTimeUtils;
@@ -44,9 +38,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,33 +61,6 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
   }
 
   @Override
-  public List<TimeRecordDTO> findByChipTimeDate(String date) throws EnduranceTrioException {
-
-    // Get the given date as an OffsetDateTime with the earliest possible time
-    LocalDateTime queryStartDate;
-    try {
-
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-      LocalDate localDate = LocalDate.parse(date, formatter);
-
-      queryStartDate = LocalDateTime.of(localDate, LocalTime.MIN);
-    } catch (DateTimeParseException exception) {
-
-      String message = exception.getMessage();
-      ErrorDTO error = new ErrorDTO(EnduranceTrioError.MALFORMED_PARAMETER);
-
-      throw new MalformedParameterException(message, error);
-    }
-
-    final List<MylapsTimes> times =
-        mylapsTimesRepository.findByChipTimeBetween(queryStartDate, queryStartDate.plusDays(1L));
-
-    return times.stream().map(timingRecordMapper::map).distinct()
-                .sorted(Comparator.comparing(TimeRecordDTO::getTime))
-                .collect(Collectors.toCollection(ArrayList::new));
-  }
-
-  @Override
   public List<TimingRecordDTO> findByChipTimeDate(String tzIdentifier, String date)
       throws EnduranceTrioException {
 
@@ -111,15 +75,6 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
     return times.stream().map(entity -> timingRecordMapper.map(zoneId, entity)).distinct()
                 .sorted(Comparator.comparing(TimingRecordDTO::getTime))
                 .collect(Collectors.toList());
-  }
-
-  @Override
-  public TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> findFiveWaypointsTrackTimingRecord(
-      String date) throws EnduranceTrioException {
-
-    List<TimeRecordDTO> timeRecords = findByChipTimeDate(date);
-
-    return trackTimingDataMapper.map(timeRecords);
   }
 
   @Override
