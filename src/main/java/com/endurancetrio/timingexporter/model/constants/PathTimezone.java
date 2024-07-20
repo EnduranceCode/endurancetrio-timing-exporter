@@ -37,7 +37,7 @@ import com.endurancetrio.timingexporter.model.exception.MalformedParameterExcept
  * endpoints checks easier from any device (such as a smartphone). Those timezones are listed on
  * this Enum.
  * <p>
- * The timezones not listed on this Enum, will be supported as values passeds in the request body.
+ * The timezones not listed on this Enum, will be supported as values passed in the request body.
  */
 public enum PathTimezone {
   LISBON("Europe/Lisbon"),

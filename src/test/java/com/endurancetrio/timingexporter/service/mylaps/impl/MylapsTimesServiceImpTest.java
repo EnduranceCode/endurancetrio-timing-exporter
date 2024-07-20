@@ -27,7 +27,6 @@ package com.endurancetrio.timingexporter.service.mylaps.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,7 +34,6 @@ import static org.mockito.Mockito.when;
 
 import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
-import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
@@ -44,7 +42,6 @@ import com.endurancetrio.timingexporter.repository.mylaps.MylapsTimesRepository;
 import com.endurancetrio.timingexporter.utils.DateTimeUtils;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -96,45 +93,6 @@ class MylapsTimesServiceImpTest {
   }
 
   @Test
-  void findByChipTimeDate() throws EnduranceTrioException {
-    LocalDateTime testStart = LocalDateTime.parse("1984-08-15T00:00:00");
-    LocalDateTime testEnd = testStart.plusDays(1L);
-
-    LocalDateTime testTime1 = LocalDateTime.parse("1984-08-15T15:07:00.15");
-    LocalDateTime testTime2 = LocalDateTime.parse("1984-08-15T15:07:06.20");
-    LocalDateTime testTime3 = LocalDateTime.parse("1984-08-15T15:07:12.25");
-
-    TimeRecordDTO recordDTO1 =
-        TimeRecordDTO.builder().chip("AAAAAAA").time(testTime1.toInstant(ZoneOffset.UTC))
-                     .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
-    TimeRecordDTO recordDTO2 =
-        TimeRecordDTO.builder().chip("AAAAAAB").time(testTime2.toInstant(ZoneOffset.UTC))
-                     .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
-    TimeRecordDTO recordDTO3 =
-        TimeRecordDTO.builder().chip("AAAAAAC").time(testTime3.toInstant(ZoneOffset.UTC))
-                     .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
-    TimeRecordDTO recordDTO9 =
-        TimeRecordDTO.builder().chip("AAAAAAC").time(testTime3.toInstant(ZoneOffset.UTC))
-                     .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
-
-    when(mylapsTimesRepository.findByChipTimeBetween(testStart, testEnd)).thenReturn(testData);
-    when(timingRecordMapper.map(testMylapsTimes1)).thenReturn(recordDTO1);
-    when(timingRecordMapper.map(testMylapsTimes2)).thenReturn(recordDTO2);
-    when(timingRecordMapper.map(testMylapsTimes3)).thenReturn(recordDTO3);
-    when(timingRecordMapper.map(testMylapsTimes9)).thenReturn(recordDTO9);
-
-    List<TimeRecordDTO> results = mylapsTimesService.findByChipTimeDate("1984-08-15");
-
-    verify(mylapsTimesRepository, times(1)).findByChipTimeBetween(any(), any());
-    verify(timingRecordMapper, times(4)).map(any());
-    assertNotNull(results);
-    assertEquals(3, results.size());
-    assertEquals("AAAAAAA", results.get(0).getChip());
-    assertEquals("AAAAAAB", results.get(1).getChip());
-    assertEquals("AAAAAAC", results.get(2).getChip());
-  }
-
-  @Test
   void findByTimezoneAndChipTimeDate() throws EnduranceTrioException {
     String tzIdentifier = PathTimezone.LISBON.getTimezone();
     String date = "1984-08-15";
@@ -177,11 +135,5 @@ class MylapsTimesServiceImpTest {
     assertEquals("AAAAAAA", results.get(0).getChip());
     assertEquals("AAAAAAB", results.get(1).getChip());
     assertEquals("AAAAAAC", results.get(2).getChip());
-  }
-
-  @Test
-  void findByChipTimeDateAndThrowAnException() {
-    assertThrows(
-        EnduranceTrioException.class, () -> mylapsTimesService.findByChipTimeDate("19840815"));
   }
 }

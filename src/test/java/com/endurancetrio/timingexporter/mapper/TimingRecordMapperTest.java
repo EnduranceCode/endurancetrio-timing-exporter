@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
-import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
@@ -52,7 +51,6 @@ class TimingRecordMapperTest {
   TimingRecordMapper timingRecordMapper;
 
   MylapsTimes mylapsTestEntity;
-  TimeRecordDTO expectedDto;
   TimingRecordDTO expectedTimingDTO;
 
   @BeforeEach
@@ -64,36 +62,9 @@ class TimingRecordMapperTest {
     mylapsTestEntity = MylapsTimes.builder().chip("AAAAAAA").chipTime(testLocalDateTime)
                                   .milliSecs(testTimeMilliseconds).location("SL: Start line")
                                   .lapRaw(1).build();
-    expectedDto =
-        TimeRecordDTO.builder().chip("AAAAAAA").time(testInstant).waypoint(EnduranceTrioWaypoint.SL)
-                     .lap(1).build();
 
     expectedTimingDTO = TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.SL).chip("AAAAAAA")
                                        .time(testInstant).lap(1).build();
-  }
-
-  @Test
-  void entityToDtoWithValidLocation() {
-
-    TimeRecordDTO dto = timingRecordMapper.map(mylapsTestEntity);
-
-    assertEquals(expectedDto.getChip(), dto.getChip());
-    assertEquals(expectedDto.getTime(), dto.getTime());
-    assertEquals(expectedDto.getWaypoint(), dto.getWaypoint());
-    assertEquals(expectedDto.getLap(), dto.getLap());
-  }
-
-  @Test
-  void entityToDtoWithInvalidLocation() {
-
-    mylapsTestEntity.setLocation("UNKNOWN");
-    TimeRecordDTO dto = timingRecordMapper.map(mylapsTestEntity);
-
-    assertEquals(expectedDto.getChip(), dto.getChip());
-    assertEquals(expectedDto.getTime(), dto.getTime());
-    assertNull(dto.getWaypoint());
-    assertEquals("UNKNOWN", dto.getLocation());
-    assertEquals(expectedDto.getLap(), dto.getLap());
   }
 
   @Test

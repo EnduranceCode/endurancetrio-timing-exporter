@@ -29,11 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.endurancetrio.timingexporter.model.dto.common.FiveWaypointsTrackTimingRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.RaceTimingDataDTO;
-import com.endurancetrio.timingexporter.model.dto.common.TimeRecordDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
-import com.endurancetrio.timingexporter.model.dto.common.TrackTimingDataDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -55,13 +52,6 @@ class TrackTimingDataMapperTest {
   OffsetDateTime testTime4;
   OffsetDateTime testTime5;
 
-  TimeRecordDTO recordDTO1;
-  TimeRecordDTO recordDTO2;
-  TimeRecordDTO recordDTO3;
-  TimeRecordDTO recordDTO4;
-  TimeRecordDTO recordDTO5;
-  TimeRecordDTO recordDTO9;
-
   TimingRecordDTO timingRecordDTO01;
   TimingRecordDTO timingRecordDTO02;
   TimingRecordDTO timingRecordDTO03;
@@ -77,20 +67,6 @@ class TrackTimingDataMapperTest {
     testTime4 = OffsetDateTime.parse("1984-08-15T15:48:35.85+00:00");
     testTime5 = OffsetDateTime.parse("1984-08-15T16:15:15.15+00:00");
 
-    recordDTO1 = TimeRecordDTO.builder().chip("AAAAAAA").time(testTime1.toInstant())
-                              .waypoint(EnduranceTrioWaypoint.WA).lap(1).build();
-    recordDTO2 = TimeRecordDTO.builder().chip("AAAAAAA").time(testTime2.toInstant())
-                              .waypoint(EnduranceTrioWaypoint.WB).lap(1).build();
-    recordDTO3 = TimeRecordDTO.builder().chip("AAAAAAA").time(testTime3.toInstant())
-                              .waypoint(EnduranceTrioWaypoint.WC).lap(1).build();
-    recordDTO4 = TimeRecordDTO.builder().chip("AAAAAAA").time(testTime4.toInstant())
-                              .waypoint(EnduranceTrioWaypoint.WD).lap(1).build();
-    recordDTO5 = TimeRecordDTO.builder().chip("AAAAAAA").time(testTime5.toInstant())
-                              .waypoint(EnduranceTrioWaypoint.FL).lap(1).build();
-    recordDTO9 =
-        TimeRecordDTO.builder().chip("AAAAAAA").time(testTime1.toInstant()).location("LS").lap(1)
-                     .build();
-
     timingRecordDTO01 = TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.WA).chip("AAAAAAA")
                                        .time(testTime1.toInstant()).lap(1).build();
     timingRecordDTO02 = TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.WB).chip("AAAAAAA")
@@ -104,45 +80,6 @@ class TrackTimingDataMapperTest {
     timingRecordDTO09 =
         TimingRecordDTO.builder().location("LS").chip("AAAAAAA").time(testTime1.toInstant()).lap(1)
                        .build();
-  }
-
-  @Test
-  void map() {
-    List<TimeRecordDTO> timeRecords =
-        List.of(recordDTO1, recordDTO2, recordDTO3, recordDTO4, recordDTO5, recordDTO9);
-
-    TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> result =
-        trackTimingDataMapper.map(timeRecords);
-
-    assertNotNull(result);
-    assertEquals(1, result.getValidTrackRecords().size());
-    assertEquals(1, result.getInvalidTrackRecords().size());
-    assertEquals(testTime1.toInstant(), result.getValidTrackRecords().get(0).getTimeOnWaypointA());
-    assertEquals(testTime2.toInstant(), result.getValidTrackRecords().get(0).getTimeOnWaypointB());
-    assertEquals(testTime3.toInstant(), result.getValidTrackRecords().get(0).getTimeOnWaypointC());
-    assertEquals(testTime4.toInstant(), result.getValidTrackRecords().get(0).getTimeOnWaypointD());
-    assertEquals(testTime5.toInstant(), result.getValidTrackRecords().get(0).getTimeOnFinishLine());
-    assertEquals(testTime1.toInstant(), result.getInvalidTrackRecords().get(0).getTime());
-  }
-
-  @Test
-  void mapInvalidTimeRecords() {
-    recordDTO1.setWaypoint(null).setLocation("T1");
-    recordDTO2.setWaypoint(null).setLocation("T2");
-    recordDTO3.setWaypoint(null).setLocation("T3");
-    recordDTO4.setWaypoint(null).setLocation("T4");
-    recordDTO5.setWaypoint(null).setLocation("T5");
-
-    List<TimeRecordDTO> timeRecords =
-        List.of(recordDTO1, recordDTO2, recordDTO3, recordDTO4, recordDTO5, recordDTO9);
-
-    TrackTimingDataDTO<FiveWaypointsTrackTimingRecordDTO> result =
-        trackTimingDataMapper.map(timeRecords);
-
-    assertNotNull(result);
-    assertEquals(0, result.getValidTrackRecords().size());
-    assertEquals(6, result.getInvalidTrackRecords().size());
-    assertEquals(testTime1.toInstant(), result.getInvalidTrackRecords().get(0).getTime());
   }
 
   @Test
