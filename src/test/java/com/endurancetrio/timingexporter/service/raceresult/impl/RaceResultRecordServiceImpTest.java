@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Ricardo do Canto
+ * Copyright (c) 2024 Ricardo do Canto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,12 @@
  *
  */
 
-package com.endurancetrio.timingexporter.service.mylaps.impl;
+package com.endurancetrio.timingexporter.service.raceresult.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,10 +37,12 @@ import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
-import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
+import com.endurancetrio.timingexporter.model.entity.raceresult.RaceResultRecord;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
-import com.endurancetrio.timingexporter.repository.mylaps.MylapsTimesRepository;
+import com.endurancetrio.timingexporter.repository.raceresult.RaceResultRecordRepository;
 import com.endurancetrio.timingexporter.utils.DateTimeUtils;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -52,55 +55,57 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-class MylapsTimesServiceImpTest {
+class RaceResultRecordServiceImpTest {
 
   @InjectMocks
-  MylapsTimesServiceImp underTest;
+  RaceResultRecordServiceImp underTest;
 
   @Mock
-  MylapsTimesRepository mylapsTimesRepository;
+  RaceResultRecordRepository raceResultRecordRepository;
 
   @Mock
   TimingRecordMapper timingRecordMapper;
 
-  final List<MylapsTimes> testData = new ArrayList<>();
-  MylapsTimes testMylapsTimes1;
-  MylapsTimes testMylapsTimes2;
-  MylapsTimes testMylapsTimes3;
-  MylapsTimes testMylapsTimes9;
+  final String eventReference = "19840815NAC001";
+
+  final List<RaceResultRecord> testData = new ArrayList<>();
+  RaceResultRecord testRaceResultRecord1;
+  RaceResultRecord testRaceResultRecord2;
+  RaceResultRecord testRaceResultRecord3;
+  RaceResultRecord testRaceResultRecord9;
 
   @BeforeEach
   void setUp() {
-    LocalDateTime testChipTime1 = LocalDateTime.parse("1984-08-15T15:07:00");
-    LocalDateTime testChipTime2 = LocalDateTime.parse("1984-08-15T15:07:06");
-    LocalDateTime testChipTime3 = LocalDateTime.parse("1984-08-15T15:07:12");
+    LocalDate date = LocalDate.parse("1984-08-15");
 
-    testMylapsTimes1 =
-        MylapsTimes.builder().id(1L).chip("AAAAAAA").chipTime(testChipTime1).milliSecs(54420150)
-                   .location("WA").lapRaw(1).build();
-    testMylapsTimes2 =
-        MylapsTimes.builder().id(2L).chip("AAAAAAB").chipTime(testChipTime2).milliSecs(54426200)
-                   .location("WA").lapRaw(1).build();
-    testMylapsTimes3 =
-        MylapsTimes.builder().id(3L).chip("AAAAAAC").chipTime(testChipTime3).milliSecs(54432250)
-                   .location("WA").lapRaw(1).build();
-    testMylapsTimes9 =
-        MylapsTimes.builder().id(9L).chip("AAAAAAC").chipTime(testChipTime3).milliSecs(54432250)
-                   .location("WA").lapRaw(1).build();
+    testRaceResultRecord1 =
+        RaceResultRecord.builder().id(1L).eventReference(eventReference).timingPoint("WA")
+                        .chip("AAAAAAA").chipDate(date).chipSecond(BigDecimal.valueOf(54420.150))
+                        .passageNo(1).build();
+    testRaceResultRecord2 =
+        RaceResultRecord.builder().id(2L).eventReference(eventReference).timingPoint("WA")
+                        .chip("AAAAAAB").chipDate(date).chipSecond(BigDecimal.valueOf(54426.200))
+                        .passageNo(2).build();
+    testRaceResultRecord3 =
+        RaceResultRecord.builder().id(3L).eventReference(eventReference).timingPoint("WA")
+                        .chip("AAAAAAC").chipDate(date).chipSecond(BigDecimal.valueOf(54432.250))
+                        .passageNo(3).build();
+    testRaceResultRecord9 =
+        RaceResultRecord.builder().id(9L).eventReference(eventReference).timingPoint("WA")
+                        .chip("AAAAAAC").chipDate(date).chipSecond(BigDecimal.valueOf(54432.250))
+                        .passageNo(3).build();
 
-    testData.addAll(
-        List.of(testMylapsTimes1, testMylapsTimes2, testMylapsTimes3, testMylapsTimes9));
+    testData.addAll(List.of(testRaceResultRecord1, testRaceResultRecord2, testRaceResultRecord3,
+                            testRaceResultRecord9
+    ));
   }
 
   @Test
-  void findByTimezoneAndChipTimeDate() throws EnduranceTrioException {
+  void findByEventReference() throws EnduranceTrioException {
     String tzIdentifier = PathTimezone.LISBON.getTimezone();
     String date = "1984-08-15";
 
     ZoneId zoneId = DateTimeUtils.getZoneId(tzIdentifier);
-
-    LocalDateTime testStart = LocalDateTime.parse("1984-08-15T00:00:00");
-    LocalDateTime testEnd = testStart.plusDays(1L);
 
     LocalDateTime testTime1 = LocalDateTime.parse("1984-08-15T15:07:00.15");
     LocalDateTime testTime2 = LocalDateTime.parse("1984-08-15T15:07:06.20");
@@ -108,27 +113,27 @@ class MylapsTimesServiceImpTest {
 
     TimingRecordDTO recordDTO1 =
         TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.WA).chip("AAAAAAA")
-                       .time(testTime1.atZone(zoneId).toInstant()).lap(1).build();
+                       .time(testTime1.atZone(zoneId).toInstant()).build();
     TimingRecordDTO recordDTO2 =
         TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.WA).chip("AAAAAAB")
-                       .time(testTime2.atZone(zoneId).toInstant()).lap(1).build();
+                       .time(testTime2.atZone(zoneId).toInstant()).build();
     TimingRecordDTO recordDTO3 =
         TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.WA).chip("AAAAAAC")
-                       .time(testTime3.atZone(zoneId).toInstant()).lap(1).build();
+                       .time(testTime3.atZone(zoneId).toInstant()).build();
     TimingRecordDTO recordDTO9 =
         TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.WA).chip("AAAAAAC")
-                       .time(testTime3.atZone(zoneId).toInstant()).lap(1).build();
+                       .time(testTime3.atZone(zoneId).toInstant()).build();
 
-    when(mylapsTimesRepository.findByChipTimeBetween(testStart, testEnd)).thenReturn(testData);
-    when(timingRecordMapper.map(zoneId, testMylapsTimes1)).thenReturn(recordDTO1);
-    when(timingRecordMapper.map(zoneId, testMylapsTimes2)).thenReturn(recordDTO2);
-    when(timingRecordMapper.map(zoneId, testMylapsTimes3)).thenReturn(recordDTO3);
-    when(timingRecordMapper.map(zoneId, testMylapsTimes9)).thenReturn(recordDTO9);
+    when(raceResultRecordRepository.findByEventReference(eventReference)).thenReturn(testData);
+    when(timingRecordMapper.map(zoneId, testRaceResultRecord1)).thenReturn(recordDTO1);
+    when(timingRecordMapper.map(zoneId, testRaceResultRecord2)).thenReturn(recordDTO2);
+    when(timingRecordMapper.map(zoneId, testRaceResultRecord3)).thenReturn(recordDTO3);
+    when(timingRecordMapper.map(zoneId, testRaceResultRecord9)).thenReturn(recordDTO9);
 
-    List<TimingRecordDTO> results = underTest.findByChipTimeDate(tzIdentifier, date);
+    List<TimingRecordDTO> results = underTest.findByEventReference(tzIdentifier, eventReference);
 
-    verify(mylapsTimesRepository, times(1)).findByChipTimeBetween(any(), any());
-    verify(timingRecordMapper, times(4)).map(any(), any(MylapsTimes.class));
+    verify(raceResultRecordRepository, times(1)).findByEventReference(anyString());
+    verify(timingRecordMapper, times(4)).map(any(), any(RaceResultRecord.class));
     assertNotNull(results);
     assertEquals(3, results.size());
     assertEquals("AAAAAAA", results.get(0).getChip());

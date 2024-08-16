@@ -32,12 +32,12 @@ import com.endurancetrio.timingexporter.model.constants.PathTimezone;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
+import com.endurancetrio.timingexporter.model.entity.raceresult.RaceResultRecord;
 import com.endurancetrio.timingexporter.model.exception.MalformedParameterException;
 import com.endurancetrio.timingexporter.utils.DateTimeUtils;
-import java.time.Instant;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,72 +50,88 @@ class TimingRecordMapperTest {
   @InjectMocks
   TimingRecordMapper timingRecordMapper;
 
-  MylapsTimes mylapsTestEntity;
+  String tzIdentifier = PathTimezone.LISBON.getTimezone();
+  ZoneId zoneId = DateTimeUtils.getZoneId(tzIdentifier);
+
+  MylapsTimes mylapsEntity;
+  RaceResultRecord raceResultEntity;
   TimingRecordDTO expectedTimingDTO;
+
+  TimingRecordMapperTest() throws MalformedParameterException {
+    super();
+  }
 
   @BeforeEach
   void setUp() {
-    Integer testTimeMilliseconds = 15 * 60 * 60 * 1000;
+    int testTimeMilliseconds = 15 * 60 * 60 * 1000;
     LocalDateTime testLocalDateTime = LocalDateTime.of(1984, 8, 15, 15, 0, 0);
-    Instant testInstant = testLocalDateTime.toInstant(ZoneOffset.UTC);
 
-    mylapsTestEntity = MylapsTimes.builder().chip("AAAAAAA").chipTime(testLocalDateTime)
-                                  .milliSecs(testTimeMilliseconds).location("SL: Start line")
-                                  .lapRaw(1).build();
+    mylapsEntity = MylapsTimes.builder().chip("AAAAAAA").chipTime(testLocalDateTime)
+                              .milliSecs(testTimeMilliseconds).location("SL: Start line").lapRaw(1)
+                              .build();
+
+    raceResultEntity = RaceResultRecord.builder().timingPoint("SL: Start line").chip("AAAAAAA")
+                                       .chipDate(testLocalDateTime.toLocalDate())
+                                       .chipSecond(BigDecimal.valueOf(testTimeMilliseconds / 1000))
+                                       .passageNo(1).build();
 
     expectedTimingDTO = TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.SL).chip("AAAAAAA")
-                                       .time(testInstant).lap(1).build();
+                                       .time(testLocalDateTime.atZone(zoneId).toInstant()).lap(1)
+                                       .build();
   }
 
   @Test
-  void entityToTimingDtoWithValidLocation() throws MalformedParameterException {
-    String tzIdentifier = PathTimezone.LISBON.getTimezone();
-    ZoneId zoneId = DateTimeUtils.getZoneId(tzIdentifier);
+  void mylapsEntityWithValidLocationToTimingDto() {
 
-    Integer testTimeMilliseconds = 15 * 60 * 60 * 1000;
-    LocalDateTime testLocalDateTime = LocalDateTime.of(1984, 8, 15, 15, 0, 0);
-    Instant testInstant = testLocalDateTime.atZone(zoneId).toInstant();
+    TimingRecordDTO dto = timingRecordMapper.map(zoneId, mylapsEntity);
 
-    MylapsTimes entity = MylapsTimes.builder().chip("AAAAAAA").chipTime(testLocalDateTime)
-                                    .milliSecs(testTimeMilliseconds).location("SL: Start line")
-                                    .lapRaw(1).build();
-    TimingRecordDTO expected =
-        TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.SL).chip("AAAAAAA")
-                       .time(testInstant)
-                       .lap(1).build();
-
-    TimingRecordDTO dto = timingRecordMapper.map(zoneId, entity);
-
-    assertEquals(expected.getChip(), dto.getChip());
-    assertEquals(expected.getTime(), dto.getTime());
-    assertEquals(expected.getWaypoint(), dto.getWaypoint());
-    assertEquals(expected.getLap(), dto.getLap());
+    assertEquals(expectedTimingDTO.getChip(), dto.getChip());
+    assertEquals(expectedTimingDTO.getTime(), dto.getTime());
+    assertEquals(expectedTimingDTO.getWaypoint(), dto.getWaypoint());
+    assertNull(dto.getLocation());
+    assertEquals(expectedTimingDTO.getLap(), dto.getLap());
   }
 
   @Test
-  void entityToTimingDtoWithInvalidLocation() throws MalformedParameterException {
+  void mylapsEntityWithInvalidLocationToTimingDto() {
 
-    String tzIdentifier = PathTimezone.LISBON.getTimezone();
-    ZoneId zoneId = DateTimeUtils.getZoneId(tzIdentifier);
+    mylapsEntity.setLocation("UNKNOWN");
 
-    Integer testTimeMilliseconds = 15 * 60 * 60 * 1000;
-    LocalDateTime testLocalDateTime = LocalDateTime.of(1984, 8, 15, 15, 0, 0);
-    Instant testInstant = testLocalDateTime.atZone(zoneId).toInstant();
+    TimingRecordDTO dto = timingRecordMapper.map(zoneId, mylapsEntity);
 
-    MylapsTimes entity = MylapsTimes.builder().chip("AAAAAAA").chipTime(testLocalDateTime)
-                                    .milliSecs(testTimeMilliseconds).location("UNKNOWN")
-                                    .lapRaw(1).build();
-    TimingRecordDTO expected =
-        TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.SL).chip("AAAAAAA")
-                       .time(testInstant)
-                       .lap(1).build();
-
-    TimingRecordDTO dto = timingRecordMapper.map(zoneId, entity);
-
-    assertEquals(expected.getChip(), dto.getChip());
-    assertEquals(expected.getTime(), dto.getTime());
+    assertEquals(expectedTimingDTO.getChip(), dto.getChip());
+    assertEquals(expectedTimingDTO.getTime(), dto.getTime());
     assertNull(dto.getWaypoint());
     assertEquals("UNKNOWN", dto.getLocation());
-    assertEquals(expected.getLap(), dto.getLap());
+    assertEquals(expectedTimingDTO.getLap(), dto.getLap());
+  }
+
+  @Test
+  void raceResultEntityWithValidTimingPointToTimingDto() {
+
+    expectedTimingDTO.setLap(null);
+
+    TimingRecordDTO dto = timingRecordMapper.map(zoneId, raceResultEntity);
+
+    assertEquals(expectedTimingDTO.getChip(), dto.getChip());
+    assertEquals(expectedTimingDTO.getTime(), dto.getTime());
+    assertEquals(expectedTimingDTO.getWaypoint(), dto.getWaypoint());
+    assertNull(dto.getLocation());
+    assertEquals(expectedTimingDTO.getLap(), dto.getLap());
+  }
+
+  @Test
+  void raceResultEntityWithInvalidTimingPointToTimingDto() {
+
+    raceResultEntity.setTimingPoint("UNKNOWN");
+    expectedTimingDTO.setLap(null);
+
+    TimingRecordDTO dto = timingRecordMapper.map(zoneId, raceResultEntity);
+
+    assertEquals(expectedTimingDTO.getChip(), dto.getChip());
+    assertEquals(expectedTimingDTO.getTime(), dto.getTime());
+    assertNull(dto.getWaypoint());
+    assertEquals("UNKNOWN", dto.getLocation());
+    assertEquals(expectedTimingDTO.getLap(), dto.getLap());
   }
 }
