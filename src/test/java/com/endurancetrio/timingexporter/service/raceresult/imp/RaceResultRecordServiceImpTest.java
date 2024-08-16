@@ -23,7 +23,7 @@
  *
  */
 
-package com.endurancetrio.timingexporter.service.raceresult.impl;
+package com.endurancetrio.timingexporter.service.raceresult.imp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

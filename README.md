@@ -17,8 +17,9 @@
 ## Introduction
 
 **EnduranceTrio Timing Exporter** is a REST API that receives and manages the data produced by
-race timing systems. The initial development is made for the [MYLAPS](https://www.mylaps.com/)
-timing system, but the goal is to support other timing systems available on the market.
+sports timing systems. The initial development was made for the [MYLAPS](https://www.mylaps.com/)
+timing system. The support for the [Race Result](https://www.raceresult.com/) system was added
+later. The goal is to keep adding support for other, available on the market, timing systems.
 
 ## Development
 
@@ -55,7 +56,7 @@ If the `my.cnf` file doesn't have the `[mysqld]` section, add it as shown below:
 Save the modifications with the command `CTRL + O` and then exit
 the [nano text editor](https://www.nano-editor.org/) with the command `CTRL + X`.
 
-To apply the changes, restart the MySQL service and verify that everything is working as expected
+To apply the changes, restart the MySQL service, and verify that everything is working as expected,
 with the following commands:
 
     sudo systemctl restart mysql
@@ -158,7 +159,38 @@ upcoming commands as appropriate and then execute it on the Ubuntu server.
 > + **{USERNAME}** : The database user's username defined in the `confidential.yaml` file;
 > + **{PASSWORD}** : The database user's password defined in the `confidential.yaml` file.
 
-#### Configure the access of MYLAPS Timing & Scoring Software app to the database
+#### Configure the access of the sports timing systems to the database
+
+##### Allow remote connections to the database
+
+To allow
+the [remote connections](https://www.digitalocean.com/community/tutorials/how-to-allow-remote-access-to-mysql)
+of the supported sports timing systems to the **EnduranceTrio Timing Exporter** database, you will
+also need to edit the MySQL server configuration. Open the MySQL main configuration
+file (`mysqld.cnf`) with the [nano text editor](https://www.nano-editor.org/) using the following
+command:
+
+    sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+Then, add (or edit) the following snippet inside `[mysqld]` section:
+
+    bind-address = 0.0.0.0
+
+Save the modifications with the command `CTRL + O` and then exit
+the [nano text editor](https://www.nano-editor.org/) with the command `CTRL + X`.
+
+To apply the changes, restart the MySQL service, and then verify that everything is working as
+expected, with the following commands:
+
+    sudo systemctl restart mysql
+    systemctl status mysql
+
+Finally, execute the upcoming command to configure the [ufw](https://launchpad.net/ufw) firewall to
+allow connections, to the MySQL port 3306, from all IP addresses.
+
+    ufw allow 3306/tcp
+
+##### Configure the access of MYLAPS Timing & Scoring Software app to the database
 
 The **EnduranceTrio Timing Exporter** application is able to manage the data produced
 by [MYLAPS](https://www.mylaps.com/) devices, but it can only access this data when
@@ -214,32 +246,40 @@ server, replace the ***{LABELS}*** in the below commands as appropriate and then
 > [`SSH`](https://en.wikipedia.org/wiki/Secure_Shell) connection is not possible, the **{HOST}**
 > ***{LABEL}*** must be replaced with `%` to provide access from all IPs.
 
-To allow
-the [remote connection](https://www.digitalocean.com/community/tutorials/how-to-allow-remote-access-to-mysql)
-of the [Timing & Scoring Software](https://www.mylaps.com/timing-scoring-software/) application to
-the **EnduranceTrio Timing Exporter** database, you will also need to edit the MySQL server
-configuration. Open the MySQL main configuration file (`mysqld.cnf`) with
-the [nano text editor](https://www.nano-editor.org/) using the following command:
+##### Configure the access of Race Result software to the database
 
-    sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+The **EnduranceTrio Timing Exporter** application is able to manage the data produced
+by [Race Result](https://www.raceresult.com/) devices, but it can only access this data when the *
+*EnduranceTrio Timing Exporter** database is added as 
+an [*exporter*](https://www.raceresult.com/en-us/support/kb?id=8445-Raw-Data-Exporters) of
+the [Race Result Software](https://www.raceresult.com/en/software/). With this
+procedure, the [Race Result Software](https://www.raceresult.com/en/software/) will be able to write
+the data, collected from the [Race Result](https://www.raceresult.com/) decoders, into
+the **EnduranceTrio Timing Exporter** database.
 
-Then, add (or edit) the following snippet inside [mysqld] section:
+To follow the [least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)
+principle, the [Race Result Software](https://www.raceresult.com/en/software/)
+connection to the **EnduranceTrio Timing Exporter** database must be done with a user that only has
+*write permissions* for the table `RaceResult` that needs to be used by the
+[Race Result Software](https://www.raceresult.com/en/software/) to export the decoders readings.
 
-    bind-address = 0.0.0.0
+To create the [Race Result Software](https://www.raceresult.com/en/software/) user
+on the **EnduranceTrio Timing Exporter** database, login into the [MySQL](https://www.mysql.com/)
+server, replace the ***{LABELS}*** in the below commands as appropriate and then execute it.
 
-Save the modifications with the command `CTRL + O` and then exit
-the [nano text editor](https://www.nano-editor.org/) with the command `CTRL + X`.
+    CREATE USER '{USERNAME}'@'%' IDENTIFIED WITH caching_sha2_password BY '{PASSWORD}';
+    GRANT INSERT ON {DATABASE_NAME}.RaceResult TO '{USERNAME}'@'%';
 
-To apply the changes, restart the MySQL service and verify that everything is working as expected
-with the following commands:
-
-    sudo systemctl restart mysql
-    systemctl status mysql
-
-Finally, execute the upcoming command to configure the [ufw](https://launchpad.net/ufw) firewall to
-allow connections, to the MySQL port 3306, from all IP addresses.
-
-    ufw allow 3306/tcp
+> **Label Definition**
+>
+> + **{USERNAME}** : The user account name to be used by the MYLAPS
+    [Race Result Software](https://www.raceresult.com/en/software/) to
+    store its data on the **EnduranceTrio Timing Exporter** database;
+> + **{PASSWORD}** : The password of the
+    [Race Result Software](https://www.raceresult.com/en/software/) account
+    on the **EnduranceTrio Timing Exporter** database;
+> + **{DATABASE_NAME}** : The **EnduranceTrio Timing Exporter** database name, as defined in the
+    `confidential.yaml` file;
 
 #### Create a user on the server to execute EnduranceTrio Timing Exporter
 

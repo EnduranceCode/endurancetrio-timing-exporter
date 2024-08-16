@@ -23,7 +23,7 @@
  *
  */
 
-package com.endurancetrio.timingexporter.controller.main.impl;
+package com.endurancetrio.timingexporter.controller.main.imp;
 
 import com.endurancetrio.timingexporter.controller.main.StaticController;
 import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class StaticControllerImpl implements StaticController {
+public class StaticControllerImp implements StaticController {
 
   private static final String LOGO_PAGE = "endurancetrio/logo.html";
 

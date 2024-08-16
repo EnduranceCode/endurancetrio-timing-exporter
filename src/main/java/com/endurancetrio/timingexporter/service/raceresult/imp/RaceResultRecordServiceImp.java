@@ -23,7 +23,7 @@
  *
  */
 
-package com.endurancetrio.timingexporter.service.raceresult.impl;
+package com.endurancetrio.timingexporter.service.raceresult.imp;
 
 import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
@@ -37,7 +37,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RaceResultRecordServiceImp implements RaceResultRecordService {
 
   private final RaceResultRecordRepository raceResultRepository;
