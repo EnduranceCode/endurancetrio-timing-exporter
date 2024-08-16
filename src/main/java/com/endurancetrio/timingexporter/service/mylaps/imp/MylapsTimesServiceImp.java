@@ -23,7 +23,7 @@
  *
  */
 
-package com.endurancetrio.timingexporter.service.mylaps.impl;
+package com.endurancetrio.timingexporter.service.mylaps.imp;
 
 import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.mapper.EventTimingMapper;

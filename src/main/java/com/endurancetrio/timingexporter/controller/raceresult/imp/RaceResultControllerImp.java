@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Ricardo do Canto
+ * Copyright (c) 2024 Ricardo do Canto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,16 +23,15 @@
  *
  */
 
-package com.endurancetrio.timingexporter.controller.mylaps.impl;
+package com.endurancetrio.timingexporter.controller.raceresult.imp;
 
-import com.endurancetrio.timingexporter.controller.mylaps.MylapsController;
+import com.endurancetrio.timingexporter.controller.raceresult.RaceResultController;
 import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
-import com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
-import com.endurancetrio.timingexporter.service.mylaps.MylapsTimesService;
+import com.endurancetrio.timingexporter.service.raceresult.RaceResultRecordService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,43 +43,33 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(ControllerConstants.API_VERSION_1 + ControllerConstants.API_RESOURCE_MYLAPS)
-public class MylapsControllerImpl implements MylapsController {
+@RequestMapping(ControllerConstants.API_VERSION_1 + ControllerConstants.API_RESOURCE_RACE_RESULT)
+public class RaceResultControllerImp implements RaceResultController {
 
   private static final String MSG_STATUS_OK = ControllerConstants.MSG_STATUS_OK;
   private static final String MSG_CODE_OK = ControllerConstants.MSG_CODE_OK;
   private static final String MSG_OK = ControllerConstants.MSG_SUCCESS;
 
-  private final MylapsTimesService mylapsTimesService;
+  private final RaceResultRecordService raceResultRecordService;
 
   @Autowired
-  public MylapsControllerImpl(MylapsTimesService mylapsTimesService) {
-    this.mylapsTimesService = mylapsTimesService;
+  public RaceResultControllerImp(RaceResultRecordService raceResultRecordService) {
+    this.raceResultRecordService = raceResultRecordService;
   }
 
   @Override
   @ResponseStatus(HttpStatus.OK)
-  @GetMapping(value = "{timezone}/times/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "{timezone}/times/{eventReference}",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
   public EnduranceTrioResponse<List<TimingRecordDTO>> findTimeRecordsByDate(
-      @PathVariable String timezone, @PathVariable String date) throws EnduranceTrioException {
-
-    String tzIdentifier = PathTimezone.fromString(timezone).getTimezone();
-
-    List<TimingRecordDTO> data = mylapsTimesService.findByChipTimeDate(tzIdentifier, date);
-
-    return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
-  }
-
-  @Override
-  @ResponseStatus(HttpStatus.OK)
-  @GetMapping(value = "{timezone}/event-timing/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public EnduranceTrioResponse<EventTimingDTO> findEventTimingData(@PathVariable String timezone,
-      @PathVariable String date
+      @PathVariable String timezone, @PathVariable String eventReference
   ) throws EnduranceTrioException {
 
     String tzIdentifier = PathTimezone.fromString(timezone).getTimezone();
 
-    EventTimingDTO data = mylapsTimesService.findEventTimingData(tzIdentifier, date);
+    List<TimingRecordDTO> data =
+        raceResultRecordService.findByEventReference(tzIdentifier, eventReference);
 
     return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
   }

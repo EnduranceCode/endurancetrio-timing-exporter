@@ -33,6 +33,7 @@ public class ControllerConstants {
 
   public static final String API_VERSION_1 = "/v1";
   public static final String API_RESOURCE_MYLAPS = "/mylaps";
+  public static final String API_RESOURCE_RACE_RESULT = "/race-result";
 
   public static final String MSG_STATUS_OK = HttpStatus.OK.getReasonPhrase();
   public static final String MSG_STATUS_ERROR = "ERROR";
