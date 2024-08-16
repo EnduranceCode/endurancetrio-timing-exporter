@@ -28,6 +28,8 @@ package com.endurancetrio.timingexporter.mapper;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
+import com.endurancetrio.timingexporter.model.entity.raceresult.RaceResultRecord;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -37,14 +39,14 @@ import java.time.temporal.ChronoUnit;
 import org.springframework.stereotype.Component;
 
 /**
- * Maps an OEM time record object into an EnduranceTrio Timing Exporter time record
+ * Maps an OEM timing record object into an EnduranceTrio Timing Exporter timing record
  * (TimingRecordDTO).
  */
 @Component
 public class TimingRecordMapper {
 
   /**
-   * Maps a MylapsTimes entity into a EnduranceTrio Timing Exporter time record (TimingRecordDTO).
+   * Maps a MylapsTimes entity into a EnduranceTrio Timing Exporter timing record (TimingRecordDTO).
    *
    * @param zoneId the given ZoneId
    * @param entity the given MylapsTimes entity
@@ -60,21 +62,49 @@ public class TimingRecordMapper {
         zeroChipZoneDateTime.plus(entity.getMilliSecs(), ChronoUnit.MILLIS);
 
     try {
-      // When the registered location is valid, the waypoint is included in the TimingRecordDTO
+      // When the registered location can be converted to a valid waypoint,
+      // it is included in the TimingRecordDTO
       return TimingRecordDTO.builder().waypoint(getWaypoint(entity.getLocation()))
                             .chip(entity.getChip()).time(chipZoneDateTime.toInstant())
                             .lap(entity.getLapRaw()).build();
     } catch (IllegalArgumentException exception) {
-      // When the registered location is NOT valid, the waypoint it is NOT included
-      // in the TimingRecordDTO and the location is added
+      // When the registered location can NOT be converted to a valid waypoint,
+      // it is NOT included in the TimingRecordDTO, and it is added as location
       return TimingRecordDTO.builder().location(entity.getLocation()).chip(entity.getChip())
                             .time(chipZoneDateTime.toInstant()).lap(entity.getLapRaw()).build();
     }
   }
 
   /**
-   * Converts the OEM system registered location into a valid EnduranceTrio Timing Exporter
-   * location.
+   * Maps a MylapsTimes entity into a EnduranceTrio Timing Exporter timing record (TimingRecordDTO).
+   *
+   * @param zoneId the given ZoneId
+   * @param entity the given MylapsTimes entity
+   * @return the converted EnduranceTrio Timing Exporter time record (TimingRecordDTO)
+   */
+  public TimingRecordDTO map(ZoneId zoneId, RaceResultRecord entity) {
+    LocalDate chipDate = entity.getChipDate();
+    ZonedDateTime zeroChipZoneDateTime = LocalDateTime.of(chipDate, LocalTime.MIN).atZone(zoneId);
+    long chipMillisecond = entity.getChipSecond().multiply(BigDecimal.valueOf(1000)).longValue();
+
+    ZonedDateTime chipZoneDateTime = zeroChipZoneDateTime.plus(chipMillisecond, ChronoUnit.MILLIS);
+
+    try {
+      // When the registered timing point can be converted to a valid waypoint,
+      // it is included in the TimingRecordDTO
+      return TimingRecordDTO.builder().waypoint(getWaypoint(entity.getTimingPoint()))
+                            .chip(entity.getChip()).time(chipZoneDateTime.toInstant()).build();
+    } catch (IllegalArgumentException exception) {
+      // When the registered timing point can NOT be converted to a valid waypoint,
+      // it is NOT included in the TimingRecordDTO, and it is added as location
+      return TimingRecordDTO.builder().location(entity.getTimingPoint()).chip(entity.getChip())
+                            .time(chipZoneDateTime.toInstant()).build();
+    }
+  }
+
+  /**
+   * Converts the OEM system registered location/timing point into a valid EnduranceTrio Timing
+   * Exporter waypoint.
    *
    * @param location the OEM system registered location
    * @return a valid EnduranceTrio Timing Exporter waypoint
