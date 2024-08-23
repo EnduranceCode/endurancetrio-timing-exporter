@@ -36,6 +36,10 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 /**
@@ -65,18 +69,18 @@ public class TimingRecordMapper {
       // When the registered location can be converted to a valid waypoint,
       // it is included in the TimingRecordDTO
       return TimingRecordDTO.builder().waypoint(getWaypoint(entity.getLocation()))
-                            .chip(entity.getChip()).time(chipZoneDateTime.toInstant())
-                            .lap(entity.getLapRaw()).build();
+                            .chip(entity.getChip()).time(chipZoneDateTime.toInstant()).build();
     } catch (IllegalArgumentException exception) {
       // When the registered location can NOT be converted to a valid waypoint,
       // it is NOT included in the TimingRecordDTO, and it is added as location
       return TimingRecordDTO.builder().location(entity.getLocation()).chip(entity.getChip())
-                            .time(chipZoneDateTime.toInstant()).lap(entity.getLapRaw()).build();
+                            .time(chipZoneDateTime.toInstant()).build();
     }
   }
 
   /**
-   * Maps a MylapsTimes entity into a EnduranceTrio Timing Exporter timing record (TimingRecordDTO).
+   * Maps a RaceResultRecord entity into a EnduranceTrio Timing Exporter timing record
+   * (TimingRecordDTO).
    *
    * @param zoneId the given ZoneId
    * @param entity the given MylapsTimes entity
@@ -100,6 +104,35 @@ public class TimingRecordMapper {
       return TimingRecordDTO.builder().location(entity.getTimingPoint()).chip(entity.getChip())
                             .time(chipZoneDateTime.toInstant()).build();
     }
+  }
+
+  /**
+   * Sets the correct lap count, per waypoint, for each chip reading on the given list of timing
+   * records (TimingRecordDTO).
+   * <p>
+   * Sets the correct lap count, per waypoint, for each chip reading on the given list of timing
+   * records (TimingRecordDTO) and sorts the list by TimingRecordDTO#time.
+   *
+   * @param timingRecords the given list of timing records (TimingRecordDTO)
+   * @return the given list of timing records with the correct lap count on each entry, sorted by
+   * record time
+   */
+  public List<TimingRecordDTO> setLapCount(List<TimingRecordDTO> timingRecords) {
+    Map<String, List<TimingRecordDTO>> groupedRecords = timingRecords.stream().collect(
+        Collectors.groupingBy(
+            timingRecord -> timingRecord.getChip() + "-" + timingRecord.getWaypoint()));
+
+    for (List<TimingRecordDTO> group : groupedRecords.values()) {
+      group.sort(Comparator.comparing(TimingRecordDTO::getTime));
+
+      for (int i = 0; i < group.size(); i++) {
+        group.get(i).setLap(i + 1);
+      }
+    }
+
+    return timingRecords.stream()
+                        .sorted(Comparator.comparing(TimingRecordDTO::getTime))
+                        .collect(Collectors.toList());
   }
 
   /**

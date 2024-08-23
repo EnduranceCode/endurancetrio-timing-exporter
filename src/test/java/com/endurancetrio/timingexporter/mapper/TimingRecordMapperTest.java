@@ -26,7 +26,9 @@
 package com.endurancetrio.timingexporter.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
@@ -36,8 +38,11 @@ import com.endurancetrio.timingexporter.model.entity.raceresult.RaceResultRecord
 import com.endurancetrio.timingexporter.model.exception.MalformedParameterException;
 import com.endurancetrio.timingexporter.utils.DateTimeUtils;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,21 +53,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class TimingRecordMapperTest {
 
   @InjectMocks
-  TimingRecordMapper timingRecordMapper;
+  TimingRecordMapper underTest;
 
-  String tzIdentifier = PathTimezone.LISBON.getTimezone();
-  ZoneId zoneId = DateTimeUtils.getZoneId(tzIdentifier);
+  String tzIdentifier;
+  ZoneId zoneId;
 
   MylapsTimes mylapsEntity;
   RaceResultRecord raceResultEntity;
   TimingRecordDTO expectedTimingDTO;
 
-  TimingRecordMapperTest() throws MalformedParameterException {
-    super();
-  }
-
   @BeforeEach
-  void setUp() {
+  void setUp() throws MalformedParameterException {
+    tzIdentifier = PathTimezone.LISBON.getTimezone();
+    zoneId = DateTimeUtils.getZoneId(tzIdentifier);
+
     int testTimeMilliseconds = 15 * 60 * 60 * 1000;
     LocalDateTime testLocalDateTime = LocalDateTime.of(1984, 8, 15, 15, 0, 0);
 
@@ -76,14 +80,13 @@ class TimingRecordMapperTest {
                                        .passageNo(1).build();
 
     expectedTimingDTO = TimingRecordDTO.builder().waypoint(EnduranceTrioWaypoint.SL).chip("AAAAAAA")
-                                       .time(testLocalDateTime.atZone(zoneId).toInstant()).lap(1)
-                                       .build();
+                                       .time(testLocalDateTime.atZone(zoneId).toInstant()).build();
   }
 
   @Test
   void mylapsEntityWithValidLocationToTimingDto() {
 
-    TimingRecordDTO dto = timingRecordMapper.map(zoneId, mylapsEntity);
+    TimingRecordDTO dto = underTest.map(zoneId, mylapsEntity);
 
     assertEquals(expectedTimingDTO.getChip(), dto.getChip());
     assertEquals(expectedTimingDTO.getTime(), dto.getTime());
@@ -97,7 +100,7 @@ class TimingRecordMapperTest {
 
     mylapsEntity.setLocation("UNKNOWN");
 
-    TimingRecordDTO dto = timingRecordMapper.map(zoneId, mylapsEntity);
+    TimingRecordDTO dto = underTest.map(zoneId, mylapsEntity);
 
     assertEquals(expectedTimingDTO.getChip(), dto.getChip());
     assertEquals(expectedTimingDTO.getTime(), dto.getTime());
@@ -109,9 +112,7 @@ class TimingRecordMapperTest {
   @Test
   void raceResultEntityWithValidTimingPointToTimingDto() {
 
-    expectedTimingDTO.setLap(null);
-
-    TimingRecordDTO dto = timingRecordMapper.map(zoneId, raceResultEntity);
+    TimingRecordDTO dto = underTest.map(zoneId, raceResultEntity);
 
     assertEquals(expectedTimingDTO.getChip(), dto.getChip());
     assertEquals(expectedTimingDTO.getTime(), dto.getTime());
@@ -124,14 +125,38 @@ class TimingRecordMapperTest {
   void raceResultEntityWithInvalidTimingPointToTimingDto() {
 
     raceResultEntity.setTimingPoint("UNKNOWN");
-    expectedTimingDTO.setLap(null);
 
-    TimingRecordDTO dto = timingRecordMapper.map(zoneId, raceResultEntity);
+    TimingRecordDTO dto = underTest.map(zoneId, raceResultEntity);
 
     assertEquals(expectedTimingDTO.getChip(), dto.getChip());
     assertEquals(expectedTimingDTO.getTime(), dto.getTime());
     assertNull(dto.getWaypoint());
     assertEquals("UNKNOWN", dto.getLocation());
     assertEquals(expectedTimingDTO.getLap(), dto.getLap());
+  }
+
+  @Test
+  void setLapCount() {
+    LocalDateTime date = LocalDateTime.of(1984, 8, 15, 0, 0, 0);
+    long testChipMillisecond1 = 16 * 60 * 60 * 1000;
+    long testChipMillisecond2 = 15 * 60 * 60 * 1000;
+    Instant testTime1 =
+        date.plus(testChipMillisecond1, ChronoUnit.MILLIS).atZone(zoneId).toInstant();
+    Instant testTime2 =
+        date.plus(testChipMillisecond2, ChronoUnit.MILLIS).atZone(zoneId).toInstant();
+
+    TimingRecordDTO testTimingRecord1 =
+        TimingRecordDTO.builder().chip("AAAAAAA").location("WD").time(testTime1).build();
+    TimingRecordDTO testTimingRecord2 =
+        TimingRecordDTO.builder().chip("AAAAAAA").location("WD").time(testTime2).build();
+
+    List<TimingRecordDTO> result =
+        underTest.setLapCount(List.of(testTimingRecord1, testTimingRecord2));
+
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertEquals(1, result.get(0).getLap());
+    assertEquals(2, result.get(1).getLap());
+    assertTrue(result.get(1).getTime().compareTo(result.get(0).getTime()) >= 0);
   }
 }

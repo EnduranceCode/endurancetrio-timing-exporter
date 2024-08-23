@@ -25,8 +25,8 @@
 
 package com.endurancetrio.timingexporter.service.mylaps.imp;
 
-import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.mapper.EventTimingMapper;
+import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
 import com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes;
@@ -38,7 +38,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +71,11 @@ public class MylapsTimesServiceImp implements MylapsTimesService {
     final List<MylapsTimes> times =
         mylapsTimesRepository.findByChipTimeBetween(queryStartDate, queryStartDate.plusDays(1L));
 
-    return times.stream().map(entity -> timingRecordMapper.map(zoneId, entity)).distinct()
-                .sorted(Comparator.comparing(TimingRecordDTO::getTime))
-                .collect(Collectors.toList());
+    List<TimingRecordDTO> timingRecords =
+        times.stream().map(entity -> timingRecordMapper.map(zoneId, entity)).distinct()
+             .collect(Collectors.toList());
+
+    return timingRecordMapper.setLapCount(timingRecords);
   }
 
   @Override
