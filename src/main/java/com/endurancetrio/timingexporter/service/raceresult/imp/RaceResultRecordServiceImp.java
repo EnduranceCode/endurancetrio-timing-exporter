@@ -33,7 +33,6 @@ import com.endurancetrio.timingexporter.repository.raceresult.RaceResultRecordRe
 import com.endurancetrio.timingexporter.service.raceresult.RaceResultRecordService;
 import com.endurancetrio.timingexporter.utils.DateTimeUtils;
 import java.time.ZoneId;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +60,10 @@ public class RaceResultRecordServiceImp implements RaceResultRecordService {
 
     List<RaceResultRecord> records = raceResultRepository.findByEventReference(eventReference);
 
-    return records.stream().map(entity -> timingRecordMapper.map(zoneId, entity)).distinct()
-                  .sorted(Comparator.comparing(TimingRecordDTO::getTime))
-                  .collect(Collectors.toList());
+    List<TimingRecordDTO> timingRecords =
+        records.stream().map(entity -> timingRecordMapper.map(zoneId, entity)).distinct()
+               .collect(Collectors.toList());
+
+    return timingRecordMapper.setLapCount(timingRecords);
   }
 }

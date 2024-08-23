@@ -43,7 +43,10 @@ import com.endurancetrio.timingexporter.utils.DateTimeUtils;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -124,6 +127,9 @@ class MylapsTimesServiceImpTest {
     when(timingRecordMapper.map(zoneId, testMylapsTimes2)).thenReturn(recordDTO2);
     when(timingRecordMapper.map(zoneId, testMylapsTimes3)).thenReturn(recordDTO3);
     when(timingRecordMapper.map(zoneId, testMylapsTimes9)).thenReturn(recordDTO9);
+    when(timingRecordMapper.setLapCount(any())).thenReturn(
+        Stream.of(recordDTO1, recordDTO2, recordDTO3)
+              .sorted(Comparator.comparing(TimingRecordDTO::getTime)).collect(Collectors.toList()));
 
     List<TimingRecordDTO> results = underTest.findByChipTimeDate(tzIdentifier, date);
 

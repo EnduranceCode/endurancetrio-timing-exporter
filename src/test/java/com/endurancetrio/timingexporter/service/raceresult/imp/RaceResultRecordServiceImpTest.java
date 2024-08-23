@@ -46,7 +46,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,16 +69,17 @@ class RaceResultRecordServiceImpTest {
   @Mock
   TimingRecordMapper timingRecordMapper;
 
-  final String eventReference = "19840815NAC001";
-
   final List<RaceResultRecord> testData = new ArrayList<>();
   RaceResultRecord testRaceResultRecord1;
   RaceResultRecord testRaceResultRecord2;
   RaceResultRecord testRaceResultRecord3;
   RaceResultRecord testRaceResultRecord9;
 
+  String eventReference;
+
   @BeforeEach
   void setUp() {
+    eventReference = "19840815NAC001";
     LocalDate date = LocalDate.parse("1984-08-15");
 
     testRaceResultRecord1 =
@@ -103,8 +107,6 @@ class RaceResultRecordServiceImpTest {
   @Test
   void findByEventReference() throws EnduranceTrioException {
     String tzIdentifier = PathTimezone.LISBON.getTimezone();
-    String date = "1984-08-15";
-
     ZoneId zoneId = DateTimeUtils.getZoneId(tzIdentifier);
 
     LocalDateTime testTime1 = LocalDateTime.parse("1984-08-15T15:07:00.15");
@@ -129,6 +131,9 @@ class RaceResultRecordServiceImpTest {
     when(timingRecordMapper.map(zoneId, testRaceResultRecord2)).thenReturn(recordDTO2);
     when(timingRecordMapper.map(zoneId, testRaceResultRecord3)).thenReturn(recordDTO3);
     when(timingRecordMapper.map(zoneId, testRaceResultRecord9)).thenReturn(recordDTO9);
+    when(timingRecordMapper.setLapCount(any())).thenReturn(
+        Stream.of(recordDTO1, recordDTO2, recordDTO3)
+              .sorted(Comparator.comparing(TimingRecordDTO::getTime)).collect(Collectors.toList()));
 
     List<TimingRecordDTO> results = underTest.findByEventReference(tzIdentifier, eventReference);
 
