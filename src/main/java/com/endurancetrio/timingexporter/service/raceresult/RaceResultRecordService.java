@@ -25,6 +25,7 @@
 
 package com.endurancetrio.timingexporter.service.raceresult;
 
+import com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import java.util.List;
@@ -32,17 +33,37 @@ import java.util.List;
 public interface RaceResultRecordService {
 
   /**
-   * Finds the Race Result records for the given event reference that were recorded with the given
-   * timezone.
+   * Finds the Race Result timing records
+   * {@link com.endurancetrio.timingexporter.model.entity.raceresult.RaceResultRecord} for the given
+   * event reference that were recorded with the given timezone.
    * <p/>
-   * Find the Race Result records for the given event reference, recorded with the given timezone,
-   * and returns the retrieved records converted into the system's time record type.
+   * Find the Race Result timing records
+   * {@link com.endurancetrio.timingexporter.model.entity.raceresult.RaceResultRecord} for the given
+   * event reference, recorded with the given timezone, and returns the retrieved records converted
+   * into the system's time record type
+   * {@link com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO}.
    *
    * @param tzIdentifier   the given timezone identifier used with the records of the given date
    * @param eventReference the given date
-   * @return the  Race Result records for the given day converted into the system's time record type
+   * @return the  Race Result timing records for the given day converted into the system's time
+   * record type
    * @throws EnduranceTrioException the custom exception
    */
   List<TimingRecordDTO> findByEventReference(String tzIdentifier, String eventReference)
+      throws EnduranceTrioException;
+
+  /**
+   * Finds the event's timing data
+   * {@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO} for the given event
+   * reference that were recorded with the given timezone.
+   *
+   * @param tzIdentifier   the given timezone identifier used with the records of the given event
+   *                       reference
+   * @param eventReference the given date
+   * @return event's timing data for the given event reference that were recorded with the given
+   * timezone
+   * @throws EnduranceTrioException the custom exception
+   */
+  EventTimingDTO findEventTimingData(String tzIdentifier, String eventReference)
       throws EnduranceTrioException;
 }

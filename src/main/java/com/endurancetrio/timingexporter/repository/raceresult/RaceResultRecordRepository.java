@@ -34,10 +34,12 @@ import org.springframework.stereotype.Repository;
 public interface RaceResultRecordRepository extends JpaRepository<RaceResultRecord, Long> {
 
   /**
-   * Find the list of Race Result passing records for the given event reference.
+   * Find the list of Race Result timing records
+   * {@link com.endurancetrio.timingexporter.model.entity.raceresult.RaceResultRecord}for the given
+   * event reference.
    *
    * @param eventReference the given event reference
-   * @return the list of Race Result passing records for the given event reference
+   * @return the list of Race Result timing records for the given event reference
    */
   List<RaceResultRecord> findByEventReference(String eventReference);
 }

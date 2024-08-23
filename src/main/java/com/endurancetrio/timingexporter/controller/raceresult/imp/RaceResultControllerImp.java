@@ -28,6 +28,7 @@ package com.endurancetrio.timingexporter.controller.raceresult.imp;
 import com.endurancetrio.timingexporter.controller.raceresult.RaceResultController;
 import com.endurancetrio.timingexporter.model.constants.ControllerConstants;
 import com.endurancetrio.timingexporter.model.constants.PathTimezone;
+import com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
 import com.endurancetrio.timingexporter.model.response.EnduranceTrioResponse;
@@ -70,6 +71,22 @@ public class RaceResultControllerImp implements RaceResultController {
 
     List<TimingRecordDTO> data =
         raceResultRecordService.findByEventReference(tzIdentifier, eventReference);
+
+    return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
+  }
+
+  @Override
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping(value = "{timezone}/event-timing/{eventReference}",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public EnduranceTrioResponse<EventTimingDTO> findEventTimingData(@PathVariable String timezone,
+      @PathVariable String eventReference
+  ) throws EnduranceTrioException {
+
+    String tzIdentifier = PathTimezone.fromString(timezone).getTimezone();
+
+    EventTimingDTO data = raceResultRecordService.findEventTimingData(tzIdentifier, eventReference);
 
     return new EnduranceTrioResponse<>(MSG_STATUS_OK, MSG_CODE_OK, MSG_OK, data);
   }

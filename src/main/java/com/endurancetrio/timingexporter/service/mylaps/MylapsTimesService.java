@@ -33,14 +33,18 @@ import java.util.List;
 public interface MylapsTimesService {
 
   /**
-   * Finds the MYLAPS times records for the given day that were recorded with the given timezone.
+   * Finds the MYLAPS timing records
+   * {@link com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes} for the given day that
+   * were recorded with the given timezone.
    * <p/>
-   * Find the MYLAPS times records for the given day, recorded with the given timezone, and returns
-   * the retrieved records converted into the system's time record type.
+   * Find the MYLAPS timing records
+   * {@link com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes}for the given day,
+   * recorded with the given timezone, and returns the retrieved records converted into the system's
+   * time record type {@link com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO}.
    *
    * @param tzIdentifier the given timezone identifier used with the records of the given date
    * @param date         the given date
-   * @return the  MYLAPS times records for the given day converted into the system's time record
+   * @return the  MYLAPS timing records for the given day converted into the system's time record
    * type
    * @throws EnduranceTrioException the custom exception
    */
@@ -48,11 +52,13 @@ public interface MylapsTimesService {
       throws EnduranceTrioException;
 
   /**
-   * Finds the race timing data for the given day that were recorded with the given timezone.
+   * Finds the event's timing data
+   * {@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO} for the given day
+   * that were recorded with the given timezone.
    *
    * @param tzIdentifier the given timezone identifier used with the records of the given date
    * @param date         the given date
-   * @return race timing data for the given day that were recorded with the given timezone
+   * @return event's timing data for the given day that were recorded with the given timezone
    * @throws EnduranceTrioException the custom exception
    */
   EventTimingDTO findEventTimingData(String tzIdentifier, String date)
