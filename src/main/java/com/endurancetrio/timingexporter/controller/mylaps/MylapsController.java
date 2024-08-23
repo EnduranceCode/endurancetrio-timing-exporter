@@ -34,14 +34,18 @@ import java.util.List;
 public interface MylapsController {
 
   /**
-   * Finds the MYLAPS times records for the given day that were recorded with the given timezone.
+   * Finds the MYLAPS timing records
+   * {@link com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes} for the given day that
+   * were recorded with the given timezone.
    * <p/>
-   * Find the MYLAPS times records for the given day, recorded with the given timezone, and returns
-   * the retrieved records converted into the system's time record type.
+   * Find the MYLAPS timing records
+   * {@link com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes}for the given day,
+   * recorded with the given timezone, and returns the retrieved records converted into the system's
+   * time record type {@link com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO}.
    *
    * @param timezone the given timezone label used with the records of the given date
    * @param date     the given date
-   * @return the  MYLAPS times records for the given day converted into the system's time record
+   * @return the MYLAPS timing records for the given day converted into the system's time record
    * type
    * @throws EnduranceTrioException the custom exception
    */
@@ -49,11 +53,13 @@ public interface MylapsController {
       throws EnduranceTrioException;
 
   /**
-   * Finds the Track Timing Data for the given day that were recorded with the given timezone.
+   * Finds the event's timing data
+   * {@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO} for the given day
+   * that were recorded with the given timezone.
    *
    * @param timezone the given timezone label used with the records of the given date
    * @param date     the given date
-   * @return the Track Timing Data for the given day and that were recorded with the given timezone
+   * @return the event's timing data for the given day that were recorded with the given timezone
    * @throws EnduranceTrioException the custom exception
    */
   EnduranceTrioResponse<EventTimingDTO> findEventTimingData(String timezone, String date)

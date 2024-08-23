@@ -44,13 +44,14 @@ import org.springframework.stereotype.Component;
 
 /**
  * Maps an OEM timing record object into an EnduranceTrio Timing Exporter timing record
- * (TimingRecordDTO).
+ * ({@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO}).
  */
 @Component
 public class TimingRecordMapper {
 
   /**
-   * Maps a MylapsTimes entity into a EnduranceTrio Timing Exporter timing record (TimingRecordDTO).
+   * Maps a MylapsTimes entity into a EnduranceTrio Timing Exporter timing record
+   * ({@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO}).
    *
    * @param zoneId the given ZoneId
    * @param entity the given MylapsTimes entity
@@ -80,7 +81,7 @@ public class TimingRecordMapper {
 
   /**
    * Maps a RaceResultRecord entity into a EnduranceTrio Timing Exporter timing record
-   * (TimingRecordDTO).
+   * ({@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO}).
    *
    * @param zoneId the given ZoneId
    * @param entity the given MylapsTimes entity
@@ -108,10 +109,11 @@ public class TimingRecordMapper {
 
   /**
    * Sets the correct lap count, per waypoint, for each chip reading on the given list of timing
-   * records (TimingRecordDTO).
+   * records ({@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO}).
    * <p>
    * Sets the correct lap count, per waypoint, for each chip reading on the given list of timing
-   * records (TimingRecordDTO) and sorts the list by TimingRecordDTO#time.
+   * records ({@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO}) and sorts
+   * the list by TimingRecordDTO#time.
    *
    * @param timingRecords the given list of timing records (TimingRecordDTO)
    * @return the given list of timing records with the correct lap count on each entry, sorted by
@@ -137,7 +139,8 @@ public class TimingRecordMapper {
 
   /**
    * Converts the OEM system registered location/timing point into a valid EnduranceTrio Timing
-   * Exporter waypoint.
+   * Exporter waypoint
+   * {@link com.endurancetrio.timingexporter.model.entity.common.EnduranceTrioWaypoint}.
    *
    * @param location the OEM system registered location
    * @return a valid EnduranceTrio Timing Exporter waypoint

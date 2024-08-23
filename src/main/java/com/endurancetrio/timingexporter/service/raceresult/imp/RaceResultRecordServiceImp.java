@@ -25,7 +25,9 @@
 
 package com.endurancetrio.timingexporter.service.raceresult.imp;
 
+import com.endurancetrio.timingexporter.mapper.EventTimingMapper;
 import com.endurancetrio.timingexporter.mapper.TimingRecordMapper;
+import com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO;
 import com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO;
 import com.endurancetrio.timingexporter.model.entity.raceresult.RaceResultRecord;
 import com.endurancetrio.timingexporter.model.exception.EnduranceTrioException;
@@ -43,13 +45,15 @@ public class RaceResultRecordServiceImp implements RaceResultRecordService {
 
   private final RaceResultRecordRepository raceResultRepository;
   private final TimingRecordMapper timingRecordMapper;
+  private final EventTimingMapper eventTimingMapper;
 
   @Autowired
   public RaceResultRecordServiceImp(RaceResultRecordRepository raceResultRepository,
-      TimingRecordMapper timingRecordMapper
+      TimingRecordMapper timingRecordMapper, EventTimingMapper eventTimingMapper
   ) {
     this.raceResultRepository = raceResultRepository;
     this.timingRecordMapper = timingRecordMapper;
+    this.eventTimingMapper = eventTimingMapper;
   }
 
   @Override
@@ -65,5 +69,14 @@ public class RaceResultRecordServiceImp implements RaceResultRecordService {
                .collect(Collectors.toList());
 
     return timingRecordMapper.setLapCount(timingRecords);
+  }
+
+  @Override
+  public EventTimingDTO findEventTimingData(String tzIdentifier, String eventReference)
+      throws EnduranceTrioException {
+
+    List<TimingRecordDTO> timingRecords = findByEventReference(tzIdentifier, eventReference);
+
+    return eventTimingMapper.convert(timingRecords);
   }
 }

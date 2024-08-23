@@ -35,11 +35,13 @@ import org.springframework.stereotype.Repository;
 public interface MylapsTimesRepository extends JpaRepository<MylapsTimes, Long> {
 
   /**
-   * Find the list of MYLAPS Times records between the given dates.
+   * Find the list of MYLAPS timing records
+   * {@link com.endurancetrio.timingexporter.model.entity.mylaps.MylapsTimes}
+   * between the given dates.
    *
    * @param start the given start OffsetDateTime
    * @param end   the given end OffsetDateTime
-   * @return the list of MYLAPS Time records of the given date
+   * @return the list of MYLAPS timing records of the given date
    */
   List<MylapsTimes> findByChipTimeBetween(LocalDateTime start, LocalDateTime end);
 }

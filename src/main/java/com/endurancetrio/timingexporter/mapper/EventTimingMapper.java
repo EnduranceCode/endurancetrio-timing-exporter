@@ -34,7 +34,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * EventTimingMapper is a utility class that provides methods for converting a list of
- * TimingRecordDTO objects into an EventTimingDTO.
+ * {@link com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO} objects
+ * into an {@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO}.
  *
  * @see TimingRecordDTO
  * @see EventTimingDTO
@@ -43,7 +44,9 @@ import org.springframework.stereotype.Component;
 public class EventTimingMapper {
 
   /**
-   * Converts a list of TimingRecordDTO into a EventTimingDTO object.
+   * Converts a list of {@link com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO}
+   * objects into an {@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO}
+   * object.
    *
    * @param timingRecords the given timing records list
    * @return a EventTimingDTO object
@@ -58,8 +61,10 @@ public class EventTimingMapper {
   }
 
   /**
-   * Maps the given list of TimingRecordDTO objects into the adequate location of the given
-   * EventTimingDTO object.
+   * Maps the given
+   * list of {@link com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO} objects into
+   * the adequate list of the given
+   * {@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO} object.
    *
    * @param eventTiming   the given EventTimingDTO object
    * @param timingRecords the given timing records list
@@ -91,7 +96,9 @@ public class EventTimingMapper {
   }
 
   /**
-   * Sorts the TimingRecordDTO lists of the given EventTimingDTO object.
+   * Sorts the {@link com.endurancetrio.timingexporter.model.dto.common.TimingRecordDTO}
+   * lists of the given {@link com.endurancetrio.timingexporter.model.dto.common.EventTimingDTO}
+   * object.
    *
    * @param eventTiming given race timing data
    */
