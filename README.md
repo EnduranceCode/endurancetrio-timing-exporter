@@ -19,7 +19,7 @@
 **EnduranceTrio Timing Exporter** is a REST API that receives and manages the data produced by
 sports timing systems. The initial development was made for the [MYLAPS](https://www.mylaps.com/)
 timing system. The support for the [Race Result](https://www.raceresult.com/) system was added
-later. The goal is to keep adding support for other, available on the market, timing systems.
+later. The goal is to keep adding support for other timing systems that are available on the market.
 
 ## Development
 
@@ -249,8 +249,8 @@ server, replace the ***{LABELS}*** in the below commands as appropriate and then
 ##### Configure the access of Race Result software to the database
 
 The **EnduranceTrio Timing Exporter** application is able to manage the data produced
-by [Race Result](https://www.raceresult.com/) devices, but it can only access this data when the *
-*EnduranceTrio Timing Exporter** database is added as 
+by [Race Result](https://www.raceresult.com/) devices, but it can only access this data when the
+**EnduranceTrio Timing Exporter** database is added as
 an [*exporter*](https://www.raceresult.com/en-us/support/kb?id=8445-Raw-Data-Exporters) of
 the [Race Result Software](https://www.raceresult.com/en/software/). With this
 procedure, the [Race Result Software](https://www.raceresult.com/en/software/) will be able to write
@@ -272,9 +272,9 @@ server, replace the ***{LABELS}*** in the below commands as appropriate and then
 
 > **Label Definition**
 >
-> + **{USERNAME}** : The user account name to be used by the MYLAPS
-    [Race Result Software](https://www.raceresult.com/en/software/) to
-    store its data on the **EnduranceTrio Timing Exporter** database;
+> + **{USERNAME}** : The user account name to be used
+    by the [Race Result Software](https://www.raceresult.com/en/software/) to store its data
+    on the **EnduranceTrio Timing Exporter** database;
 > + **{PASSWORD}** : The password of the
     [Race Result Software](https://www.raceresult.com/en/software/) account
     on the **EnduranceTrio Timing Exporter** database;
