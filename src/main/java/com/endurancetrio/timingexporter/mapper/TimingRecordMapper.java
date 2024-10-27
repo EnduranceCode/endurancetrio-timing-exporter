@@ -58,13 +58,10 @@ public class TimingRecordMapper {
    * @return the converted EnduranceTrio Timing Exporter time record (TimingRecordDTO)
    */
   public TimingRecordDTO map(ZoneId zoneId, MylapsTimes entity) {
-    LocalDateTime chipTime = entity.getChipTime();
-    LocalDate chipDate =
-        LocalDate.of(chipTime.getYear(), chipTime.getMonth(), chipTime.getDayOfMonth());
-    ZonedDateTime zeroChipZoneDateTime = LocalDateTime.of(chipDate, LocalTime.MIN).atZone(zoneId);
+    LocalDateTime zeroChipDateTime = entity.getChipTime().toLocalDate().atStartOfDay();
+    LocalDateTime chipDateTime = zeroChipDateTime.plus(entity.getMilliSecs(), ChronoUnit.MILLIS);
 
-    ZonedDateTime chipZoneDateTime =
-        zeroChipZoneDateTime.plus(entity.getMilliSecs(), ChronoUnit.MILLIS);
+    ZonedDateTime chipZoneDateTime = chipDateTime.atZone(zoneId);
 
     try {
       // When the registered location can be converted to a valid waypoint,
@@ -88,11 +85,11 @@ public class TimingRecordMapper {
    * @return the converted EnduranceTrio Timing Exporter time record (TimingRecordDTO)
    */
   public TimingRecordDTO map(ZoneId zoneId, RaceResultRecord entity) {
-    LocalDate chipDate = entity.getChipDate();
-    ZonedDateTime zeroChipZoneDateTime = LocalDateTime.of(chipDate, LocalTime.MIN).atZone(zoneId);
+    LocalDateTime zeroChipDateTime = entity.getChipDate().atStartOfDay();
     long chipMillisecond = entity.getChipSecond().multiply(BigDecimal.valueOf(1000)).longValue();
+    LocalDateTime chipDateTime = zeroChipDateTime.plus(chipMillisecond, ChronoUnit.MILLIS);
 
-    ZonedDateTime chipZoneDateTime = zeroChipZoneDateTime.plus(chipMillisecond, ChronoUnit.MILLIS);
+    ZonedDateTime chipZoneDateTime = chipDateTime.atZone(zoneId);
 
     try {
       // When the registered timing point can be converted to a valid waypoint,
